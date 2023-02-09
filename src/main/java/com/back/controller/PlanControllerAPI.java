@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/plan")
 @Api(value = "plan controller Api")
-public class PlanControllerApi {
+public class PlanControllerAPI {
 
     @Autowired
     PlanService planService;

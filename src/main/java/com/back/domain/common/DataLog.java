@@ -15,4 +15,10 @@ public class DataLog {
 
     @ApiModelProperty(example = "수정일")
     public String updated_at;
+
+    @ApiModelProperty(example = "등록자")
+    public String created_id;
+
+    @ApiModelProperty(example = "수정자")
+    public String updated_id;
 }

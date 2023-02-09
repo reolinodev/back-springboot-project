@@ -4,6 +4,7 @@ import com.back.domain.User;
 import com.back.domain.common.Header;
 import com.back.domain.common.ValidationGroups;
 import com.back.service.UserService;
+import com.back.support.JwtUtils;
 import com.back.support.ResponseUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -14,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -29,14 +30,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Api(value = "user controller Api")
+@RequiredArgsConstructor
 @RequestMapping("/api/user")
-public class UserControllerApi {
+public class UserControllerAPI {
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
+    private final JwtUtils jwtUtils;
 
     @ApiOperation(value = "사용자를 전체 조회한다.")
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<Map<String,Object>> getUserList(
         @ApiParam(
             value = "user_nm : 이름 , 널허용 \n"
@@ -67,8 +69,12 @@ public class UserControllerApi {
     public ResponseEntity <Map<String,Object>> getUserData(@PathVariable String user_id, HttpServletRequest httpServletRequest) {
         Map <String,Object> responseMap = new HashMap<>();
         User data = userService.findById(user_id);
+        int cnt = 0;
+        if(data != null){
+            cnt = 1;
+        }
 
-        String message = "1건이 조회되었습니다.";
+        String message = cnt+"건이 조회되었습니다.";
         String code = "ok";
         Header header = ResponseUtils.setHeader(message, code, httpServletRequest);
 
@@ -80,7 +86,7 @@ public class UserControllerApi {
 
 
     @ApiOperation(value = "사용자를 입력한다.")
-    @PutMapping("/")
+    @PutMapping("")
     public ResponseEntity<Map<String,Object>> inputUser(
         @ApiParam(
             value = "user_nm : 이름, 필수값, 2~10자 \n"
@@ -88,9 +94,11 @@ public class UserControllerApi {
                 +"user_pw : 비밀번호, 필수값, 최대 20자, 비밀번호형식(영문 대,소문자와 숫자, 특수기호가 적어도 1개 이상씩 포함된 8자 ~ 20자) \n"
                 +"tel_no : 휴대폰, 필수값, 휴대폰번호형식 제한"
         )
-        @Validated(ValidationGroups.UserCreateGroup.class) @RequestBody User user, HttpServletRequest httpServletRequest){
+        @Validated(ValidationGroups.UserCreateGroup.class) @RequestBody User user, HttpServletRequest httpServletRequest)
+        throws Exception {
         Map <String,Object> responseMap = new HashMap<>();
 
+        user.created_id = jwtUtils.getTokenInfo(jwtUtils.resolveToken(httpServletRequest),"user_id");
         int result = userService.save(user);
         String message = "사용자가 생성이 되었습니다.";
         String code = "ok";
@@ -113,10 +121,11 @@ public class UserControllerApi {
     @PutMapping("/{user_id}")
     public ResponseEntity<Map<String,Object>> updateUser(
         @Validated(ValidationGroups.UserUpdateGroup.class) @RequestBody User user,
-        @PathVariable String user_id, HttpServletRequest httpServletRequest) {
+        @PathVariable String user_id, HttpServletRequest httpServletRequest) throws Exception {
         Map <String,Object> responseMap = new HashMap<>();
 
         user.user_id = user_id;
+        user.updated_id = jwtUtils.getTokenInfo(jwtUtils.resolveToken(httpServletRequest),"user_id");
         int result = userService.update(user);
         String message = "사용자 정보가 수정이 되었습니다.";
         String code = "ok";

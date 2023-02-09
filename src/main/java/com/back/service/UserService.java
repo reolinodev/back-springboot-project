@@ -2,6 +2,7 @@ package com.back.service;
 
 import com.back.domain.User;
 import com.back.repository.UserRepository;
+import com.back.support.CryptUtils;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,8 @@ public class UserService {
     /**
      * 사용자를 생성합니다.
      */
-    public int save(User user) {
+    public int save(User user) throws Exception {
+        user.user_pw = CryptUtils.encryptSha256(user.user_pw);
         return userRepository.save(user);
     }
 
@@ -39,7 +41,8 @@ public class UserService {
     /**
      * 사용자 정보를 수정합니다.
      */
-    public int update(User user) {
+    public int update(User user) throws Exception {
+        user.user_pw = CryptUtils.encryptSha256(user.user_pw);
         return userRepository.update(user);
     }
 

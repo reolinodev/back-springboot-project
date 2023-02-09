@@ -47,4 +47,10 @@ public class User extends DataLog {
 
     @ApiModelProperty(example = "사용여부")
     public String use_yn;
+
+    @ApiModelProperty(example = "패스실패횟수")
+    public int pw_fail_cnt;
+
+    @ApiModelProperty(example = "최근 로그인시간")
+    public String last_login_dt;
 }

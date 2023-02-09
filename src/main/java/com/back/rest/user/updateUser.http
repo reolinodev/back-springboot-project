@@ -1,0 +1,13 @@
+PUT http://localhost:8080/api/user
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyZW9saW5vQGdtYWlsLmNvbSIsImxvZ2luX2lkIjoicmVvbGlub0BnbWFpbC5jb20iLCJ1c2VyX3B3IjoiMGZmZTFhYmQxYTA4MjE1MzUzYzIzM2Q2ZTAwOTYxM2U5NWVlYzQyNTM4MzJhNzYxYWYyOGZmMzdhYzVhMTUwYyIsInVzZXJfaWQiOiJVUzAwMDAwMDAzIiwidXNlcl9ubSI6InJlb2xpbm8iLCJleHAiOjE2NzQxMTMwNjcsImlhdCI6MTY3NDA5ODY2N30.rO40MrJg8_4K0rDr-H0aQ5DPwQlKP-XBmZaAMG6W11U
+
+{
+  "user_nm": "reolino4",
+  "login_id":"reolino4@gmail.com",
+  "user_pw": "a123123!",
+  "tel_no": "01011115555"
+}
+
+
+

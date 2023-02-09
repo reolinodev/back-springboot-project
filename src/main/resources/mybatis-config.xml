@@ -4,5 +4,6 @@
 <configuration>
   <typeAliases>
     <typeAlias type="com.back.domain.User" alias="user"/>
+    <typeAlias type="com.back.domain.LoginEntity" alias="loginEntity"/>
   </typeAliases>
 </configuration>

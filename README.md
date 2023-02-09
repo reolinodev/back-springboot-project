@@ -1,40 +1,58 @@
-# 2.RDBMS
+# 3.JWT
 
 ### # 구현 내용
 
-#### 1. 프로필 별 DB 설정 : DB 타입에 따라 mapper 분기
-  * dev, qa : postgresql
-  * prod : mariadb
-  
-#### 2. log4jdbc 적용
+#### 1. spring security 설치 및 jwt 적용
 
-#### 3. AOP transaction 처리
+#### 2. 로그인 인증 구현
 
-#### 4. validation group 처리
+#### 3. rest api 테스트 코드 추가
 
-#### 5. 테스트 코드 예제 추가
-
-#### 6. DB 암호화 처리
+#### 4. swagger와 jwt 연동 및 token 전역처리
 
 <hr/>
 
 ### # 사용방법
 
-#### 1. DB 설치  
-postgresql, mariadb가 설치 되어 있어야 한다.
-
-#### 2. DB 접속정보 추가 
-application.properties에 db 접속정보를 넣고 연동시킬 db를 타입을 설정한다. 암호화를 한다면 CryptUtilTest에 값을 넣고 
-ENC(암호화값)을 넣어주면 된다. db type은 postgresql, mariadb 이며 다른 RDBMS 필요시 DataConfig에 추가하고 사용하면 된다. 
+#### 1. rest api 테스트 코드 사용법(intellij 기준) 
+certification.http 실행해 accessToken을 얻은후 다른 api는 rest_api header 부분에 추가해준다.
+```
+{
+  "header": {
+    "requestUrl": "/api/certification",
+    "message": "인증키가 생성되었습니다.",
+    "resultCode": "ok",
+    "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyZW9saW5vQGdtYWlsLmNvbSIsImxvZ2luX2lkIjoicmVvbGlub0BnbWFpbC5jb20iLCJ1c2VyX3B3IjoiMGZmZTFhYmQxYTA4MjE1MzUzYzIzM2Q2ZTAwOTYxM2U5NWVlYzQyNTM4MzJhNzYxYWYyOGZmMzdhYzVhMTUwYyIsInVzZXJfaWQiOiJVUzAwMDAwMDA3IiwidXNlcl9ubSI6InJlb2xpbm8iLCJleHAiOjE2NzQxMzA3NDYsImlhdCI6MTY3NDExNjM0Nn0.4RfEKV9YjxNoZSAx6lfkazCsfB1-npGJYcrwX3nO3Nk",
+    "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyZW9saW5vQGdtYWlsLmNvbSIsImxvZ2luX2lkIjoicmVvbGlub0BnbWFpbC5jb20iLCJ1c2VyX3B3IjoiMGZmZTFhYmQxYTA4MjE1MzUzYzIzM2Q2ZTAwOTYxM2U5NWVlYzQyNTM4MzJhNzYxYWYyOGZmMzdhYzVhMTUwYyIsInVzZXJfaWQiOiJVUzAwMDAwMDA3IiwidXNlcl9ubSI6InJlb2xpbm8iLCJleHAiOjE2NzQyMDI3NDYsImlhdCI6MTY3NDExNjM0Nn0.2NOHK9yp5LZ79Jz4seTWi7HxbxZ88vx6i5kIYJZikJI"
+  }
+}
 
 ```
-spring.datasource.url=jdbc:log4jdbc:postgresql://localhost:5432/reodev
-spring.datasource.username=ENC(ds3r4dhBq+7tGlmtvRns9Q==)
-spring.datasource.password=ENC(ROXTIQXfIW4SCEhSIylNtbgcYnW+6eBZ)
-#DB에 따라 mybatis 분기를 위해 타입을 정의
-db.type=postgresql
+
+#### 2. security 예외 처리 방법
+Constants.java에 예외처리할 url을 입력한다. 도메인과 리소르를 분리했다.
+```
+    public static final String[] resourceArray = new String[] {
+        "/page/**",
+        "/dist/**",
+        "/lib/**",
+        "/favicon.ico"
+    };
+
+    public static final String[] permitAllArray = new String[] {
+        "/",
+        "/api/certification",
+        "/swagger-ui/**",
+        "/v2/api-docs",
+        "/swagger-resources",
+        "/swagger-resources/**"
+    };
 ```
 
+#### 3. swagger에서 jwt 전역인증하기
+1. /api/certification 실행해서 accessToken 복사
+2. swagger-ui 화면에서 Authorize 선택해서 jwt value 값에 accessToken 넣기
+3. 다른 api 실행
 
 
 

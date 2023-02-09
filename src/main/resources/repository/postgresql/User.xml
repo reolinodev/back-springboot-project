@@ -11,7 +11,9 @@
                 TEL_NO,
                 USE_YN,
                 CREATED_AT,
-                UPDATED_AT
+                UPDATED_AT,
+                CREATED_ID,
+                UPDATED_ID
         FROM    TB_USER
         WHERE 1=1
         <if test='login_id != "" and login_id != null'>
@@ -30,7 +32,9 @@
                 TEL_NO,
                 USE_YN,
                 CREATED_AT,
-                UPDATED_AT
+                UPDATED_AT,
+                CREATED_ID,
+                UPDATED_ID
         FROM    TB_USER
         WHERE   USER_ID = #{user_id}
     </select>
@@ -44,7 +48,8 @@
             USER_NM,
             USER_PW,
             TEL_NO,
-            CREATED_AT
+            CREATED_AT,
+            CREATED_ID
         )
         VALUES (
             'US'||LPAD(NEXTVAL('SEQ_USER')||'', 8, '0'),
@@ -52,14 +57,16 @@
             #{user_nm},
             #{user_pw},
             #{tel_no},
-            now()
+            now(),
+            #{created_id}
         )
     </insert>
 
 
     <update id="update" parameterType="user">
         UPDATE TB_USER
-        SET UPDATED_AT = now()
+        SET  UPDATED_AT = now()
+            ,UPDATED_ID = #{updated_id}
         <if test='user_nm != "" and user_nm != null'>
             , USER_NM = #{user_nm}
         </if>

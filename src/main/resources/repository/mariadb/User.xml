@@ -5,13 +5,13 @@
 
     <select id="findAll" parameterType="user" resultType="user">
         SELECT  USER_ID,
-        LOGIN_ID,
-        USER_NM,
-        USER_PW,
-        TEL_NO,
-        USE_YN,
-        CREATED_AT,
-        UPDATED_AT
+                LOGIN_ID,
+                USER_NM,
+                USER_PW,
+                TEL_NO,
+                USE_YN,
+                CREATED_AT,
+                UPDATED_AT
         FROM    TB_USER
         WHERE 1=1
         <if test='login_id != "" and login_id != null'>
@@ -24,13 +24,13 @@
 
     <select id="findById" parameterType="string" resultType="user">
         SELECT  USER_ID,
-        LOGIN_ID,
-        USER_NM,
-        USER_PW,
-        TEL_NO,
-        USE_YN,
-        CREATED_AT,
-        UPDATED_AT
+                LOGIN_ID,
+                USER_NM,
+                USER_PW,
+                TEL_NO,
+                USE_YN,
+                CREATED_AT,
+                UPDATED_AT
         FROM    TB_USER
         WHERE   USER_ID = #{user_id}
     </select>

@@ -1,7 +1,8 @@
-package com.back.api.service;
+package com.back.service;
 
 import com.back.domain.User;
 import com.back.service.UserService;
+import com.back.support.CryptUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,10 +45,10 @@ class UserServiceTest {
     void save() throws Exception {
         //given
         User user = new User();
-        user.user_nm = "Choi2";
-        user.login_id = "choi2@gmail.com";
-        user.user_pw = "2222";
-        user.tel_no = "01011113333";
+        user.user_nm = "reolino";
+        user.login_id = "reolino@gmail.com";
+        user.user_pw = "1111";
+        user.tel_no = "01011112222";
 
         //when
         userService.save(user);
@@ -55,26 +56,24 @@ class UserServiceTest {
         //then
         var result = userService.findAll(user);
         System.out.println("result = " + result);
-        Assertions.assertEquals("choi2@gmail.com", result.get(0).login_id);
+        Assertions.assertEquals("reolino@gmail.com", result.get(0).login_id);
     }
 
     @Test
     void update() throws Exception {
         //given
         User user = new User();
-        user.user_id ="US00000022";
-        user.user_nm = "Choi3";
-        user.user_pw = "3333";
-        user.tel_no = "01011114444";
+        user.user_id ="US00000003";
+        user.user_pw = "1111";
+        user.tel_no = "01011112222";
 
         //when
         userService.update(user);
-        var result = userService.findById("US00000022");
+        var result = userService.findById("US00000003");
         System.out.println("result = " + result);
         //then
-        Assertions.assertEquals("Choi3", result.user_nm);
-        Assertions.assertEquals("3333", result.user_pw);
-        Assertions.assertEquals("01011114444", result.tel_no);
+        Assertions.assertEquals("01011112222", result.tel_no);
+
     }
 
     @Test

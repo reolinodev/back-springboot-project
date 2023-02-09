@@ -12,7 +12,9 @@ import lombok.NoArgsConstructor;
 public class ErrorResponse {
 
     String requestUrl;
+
     String message;
+
     String resultCode;
 
     List<Error> errorList;

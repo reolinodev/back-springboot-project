@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.back.repository.LoginRepository">
+
+    <select id="countByLoginId" parameterType="loginEntity" resultType="int">
+        /* sql : LoginRepository.countByLoginId */
+        SELECT	COUNT(*)
+        FROM 	TB_USER
+        WHERE 	LOGIN_ID = #{login_id}
+        AND 	USE_YN = 'Y'
+    </select>
+
+    <select id="countByLoginIdAndUserPw" parameterType="loginEntity" resultType="int">
+        /* sql : LoginRepository.countByLoginIdAndUserPw */
+        SELECT  COUNT(*)
+        FROM 	TB_USER
+        WHERE 	LOGIN_ID = #{login_id}
+        AND 	USER_PW = #{user_pw}
+        AND 	USE_YN = 'Y'
+    </select>
+
+    <select id="findByLoginId" parameterType="loginEntity" resultType="loginEntity">
+        /* sql : LoginRepository.findByLoginId */
+        SELECT  A.USER_ID,
+                A.LOGIN_ID,
+                A.USER_NM,
+                A.USER_PW,
+                A.TEL_NO,
+                A.USE_YN,
+                A.PW_FAIL_CNT,
+                A.LAST_LOGIN_DT
+        FROM 	TB_USER A
+        WHERE   A.LOGIN_ID = #{login_id}
+    </select>
+
+    <update id="saveLastLoginDt" parameterType="loginEntity">
+        /* sql : LoginRepository.saveLastLoginDt */
+        UPDATE 	TB_USER
+        SET 	LAST_LOGIN_DT = now(),
+                PW_FAIL_CNT = 0
+        WHERE 	LOGIN_ID = #{login_id}
+    </update>
+
+    <update id="savePwfailCnt" parameterType="loginEntity">
+        /* sql : LoginRepository.savePwfailCnt */
+        UPDATE 	TB_USER
+        SET 	UPDATED_AT = now(),
+                PW_FAIL_CNT = PW_FAIL_CNT + 1
+        WHERE 	LOGIN_ID = #{login_id}
+    </update>
+
+    <insert id="saveToken" parameterType="loginEntity">
+        /* sql : LoginRepository.saveToken */
+        INSERT INTO TB_LOGIN (ACCESS_TOKEN, REFRESH_TOKEN, UPDATED_AT, LOGIN_ID)
+        VALUES (#{access_token}, #{refresh_token}, NOW(), #{login_id})
+        ON DUPLICATE KEY UPDATE ACCESS_TOKEN = #{access_token}, REFRESH_TOKEN = #{refresh_token}, UPDATED_AT = NOW()
+    </insert>
+
+    <select id="findTokenByAccessToken" parameterType="loginEntity" resultType="loginEntity">
+        /* sql : LoginRepository.findByLoginId */
+        SELECT  LOGIN_ID,
+                ACCESS_TOKEN,
+                REFRESH_TOKEN,
+                UPDATED_AT
+        FROM 	TB_LOGIN
+        WHERE 	ACCESS_TOKEN = #{access_token}
+    </select>
+</mapper>
