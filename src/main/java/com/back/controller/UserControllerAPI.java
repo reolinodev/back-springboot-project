@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Api(value = "user controller Api")
 @RequestMapping("/api/user")
-public class UserControllerApi {
+public class UserControllerAPI {
 
     @Autowired
     UserService userService;
