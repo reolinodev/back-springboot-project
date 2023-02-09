@@ -2,10 +2,9 @@ package com.back.service;
 
 import com.back.domain.User;
 import com.back.repository.UserRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,10 +19,11 @@ public class UserService {
         return userRepository.findAll(user);
     }
 
+
     /**
      * 사용자를 상세 조회 합니다.
      */
-    public User findById(Integer id) {
+    public User findById(String id) {
         return userRepository.findById(id);
     }
 
@@ -47,7 +47,7 @@ public class UserService {
     /**
      * 사용자를 삭제 합니다.
      */
-    public int deleteById(Integer id) {
+    public int deleteById(String id) {
         return userRepository.deleteById(id);
     }
 }

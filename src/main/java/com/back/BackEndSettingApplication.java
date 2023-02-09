@@ -8,7 +8,6 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 @SpringBootApplication
 public class BackEndSettingApplication extends SpringBootServletInitializer {
 
-
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         return builder.sources(BackEndSettingApplication.class);
@@ -17,5 +16,4 @@ public class BackEndSettingApplication extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(BackEndSettingApplication.class, args);
     }
-
 }

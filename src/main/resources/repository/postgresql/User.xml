@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.back.repository.UserRepository">
+
+    <select id="findAll" parameterType="user" resultType="user">
+        SELECT  USER_ID,
+                LOGIN_ID,
+                USER_NM,
+                USER_PW,
+                TEL_NO,
+                USE_YN,
+                CREATED_AT,
+                UPDATED_AT
+        FROM    TB_USER
+        WHERE 1=1
+        <if test='login_id != "" and login_id != null'>
+            AND LOGIN_ID = #{login_id}
+        </if>
+        <if test='user_nm != "" and user_nm != null'>
+            AND USER_NM = #{user_nm}
+        </if>
+    </select>
+
+    <select id="findById" parameterType="string" resultType="user">
+        SELECT  USER_ID,
+                LOGIN_ID,
+                USER_NM,
+                USER_PW,
+                TEL_NO,
+                USE_YN,
+                CREATED_AT,
+                UPDATED_AT
+        FROM    TB_USER
+        WHERE   USER_ID = #{user_id}
+    </select>
+
+
+    <insert id="save" parameterType="user">
+        /* sql : UserRepository.save */
+        INSERT INTO TB_USER (
+            USER_ID,
+            LOGIN_ID,
+            USER_NM,
+            USER_PW,
+            TEL_NO,
+            CREATED_AT
+        )
+        VALUES (
+            'US'||LPAD(NEXTVAL('SEQ_USER')||'', 8, '0'),
+            #{login_id},
+            #{user_nm},
+            #{user_pw},
+            #{tel_no},
+            now()
+        )
+    </insert>
+
+
+    <update id="update" parameterType="user">
+        UPDATE TB_USER
+        SET UPDATED_AT = now()
+        <if test='user_nm != "" and user_nm != null'>
+            , USER_NM = #{user_nm}
+        </if>
+        <if test='user_pw != "" and user_pw != null'>
+            , USER_PW = #{user_pw}
+        </if>
+        <if test='tel_no != "" and tel_no != null'>
+            , TEL_NO = #{tel_no}
+        </if>
+        WHERE USER_ID = #{user_id}
+    </update>
+
+
+    <delete id="deleteById" parameterType="string">
+        DELETE FROM TB_USER
+        WHERE USER_ID = #{user_id}
+    </delete>
+
+</mapper>

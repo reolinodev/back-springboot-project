@@ -1,33 +1,40 @@
-# 1.BASIC
+# 2.RDBMS
 
 ### # 구현 내용
-#### 1. AOP 적용
-- service 실행시간 체크
-- 파라미터 및 리턴값 로그 적용
 
-#### 2. Exception 처리
-- Valid 위반시
+#### 1. 프로필 별 DB 설정 : DB 타입에 따라 mapper 분기
+  * dev, qa : postgresql
+  * prod : mariadb
+  
+#### 2. log4jdbc 적용
 
-#### 3. Swagger 적용
-- RestConteroller만 적용되게 설정
+#### 3. AOP transaction 처리
 
-#### 4. Spring profile 설정
-- dev, qa, prod로 분기
+#### 4. validation group 처리
 
-#### 5. Response 형태 설정
-- data, header
+#### 5. 테스트 코드 예제 추가
 
-#### 6. 외부 API 호출 예제
-- Naver 검색 Api
+#### 6. DB 암호화 처리
 
 <hr/>
 
 ### # 사용방법
-#### 1. profile 적용법
-: application.properties 변경(dev, qa, prod)
-```
-spring.profiles.active=dev
-```
-#### 2. lombok을 정상적으로 사용하려면 사용하는 ide 플러그인을 설치할 것
 
-#### 3. maven으로 dependencies 다운로드 받은 이후에 기동 
+#### 1. DB 설치  
+postgresql, mariadb가 설치 되어 있어야 한다.
+
+#### 2. DB 접속정보 추가 
+application.properties에 db 접속정보를 넣고 연동시킬 db를 타입을 설정한다. 암호화를 한다면 CryptUtilTest에 값을 넣고 
+ENC(암호화값)을 넣어주면 된다. db type은 postgresql, mariadb 이며 다른 RDBMS 필요시 DataConfig에 추가하고 사용하면 된다. 
+
+```
+spring.datasource.url=jdbc:log4jdbc:postgresql://localhost:5432/reodev
+spring.datasource.username=ENC(ds3r4dhBq+7tGlmtvRns9Q==)
+spring.datasource.password=ENC(ROXTIQXfIW4SCEhSIylNtbgcYnW+6eBZ)
+#DB에 따라 mybatis 분기를 위해 타입을 정의
+db.type=postgresql
+```
+
+
+
+
