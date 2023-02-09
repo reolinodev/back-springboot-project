@@ -1,16 +1,33 @@
-# Springboot BackEnd Project
+# 1.BASIC
 
-## # 내용
-SpringBoot를 사용한 기본적인 백엔드 코드입니다. <br/>
-프로젝트의 상황에 따라 각 Branch에서 Checkout 해서 쓰기 위해 만들었습니다. 상세 구현 내용은 각 Branch에 기재 하였습니다.
+### # 구현 내용
+#### 1. AOP 적용
+- service 실행시간 체크
+- 파라미터 및 리턴값 로그 적용
 
-## # Branch별 유의사항
-Maven 프로젝트인 만큼 pom.xml에 있는 라이브러리를 다운로드 받아야 합니다. package.json이 있는 branch인 경우 npm을 통해 module을 다운로드 받아야 합니다.
+#### 2. Exception 처리
+- Valid 위반시
 
-## # 각 Branch 및 설명
+#### 3. Swagger 적용
+- RestConteroller만 적용되게 설정
 
-- [1.WEBPACK](https://github.com/reolinodev/front-springboot-project/tree/1.WEBPACK)
-  : webpack, eslint, prettier 등이 설정된 초기 세팅입니다.
+#### 4. Spring profile 설정
+- dev, qa, prod로 분기
 
-- [2.ADMIN_FRONT](업데이트 예정)
-  : 간단한 웹포탈 예제화면입니다.
+#### 5. Response 형태 설정
+- data, header
+
+#### 6. 외부 API 호출 예제
+- Naver 검색 Api
+
+<hr/>
+
+### # 사용방법
+#### 1. profile 적용법
+: application.properties 변경(dev, qa, prod)
+```
+spring.profiles.active=dev
+```
+#### 2. lombok을 정상적으로 사용하려면 사용하는 ide 플러그인을 설치할 것
+
+#### 3. maven으로 dependencies 다운로드 받은 이후에 기동 
