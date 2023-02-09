@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.back.repository.LoginRepository">
+<mapper namespace="com.back.admin.repository.LoginRepository">
 
     <select id="countByLoginId" parameterType="loginEntity" resultType="int">
         /* sql : LoginRepository.countByLoginId */
@@ -66,4 +66,23 @@
         FROM 	TB_LOGIN
         WHERE 	ACCESS_TOKEN = #{access_token}
     </select>
+
+    <insert id="saveLoginHistory" parameterType="loginEntity">
+        /* sql : LoginRepository.saveLoginHistory */
+        INSERT INTO TB_LOGIN_HISTORY
+        (
+            USER_ID,
+            LOGIN_DEVICE,
+            DEVICE_BROWSER,
+            CREATED_AT
+        )
+        VALUES
+        (
+            #{user_id},
+            #{login_device},
+            #{device_browser},
+            now()
+        )
+    </insert>
+
 </mapper>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.back.admin.repository.FaqRepository">
+
+    <select id="findAll" parameterType="faqEntity" resultType="faqEntity">
+        /* sql : FaqRepository.findAll */
+        SELECT  ROW_NUMBER() OVER (ORDER BY A.FAQ_ID DESC) RNUM,
+                A.FAQ_ID,
+                A.BOARD_ID,
+                A.FAQ_TITLE,
+                A.CREATED_AT,
+                TO_CHAR(A.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT,
+                A.UPDATED_ID,
+                FN_GETUSERNM(A.UPDATED_ID) AS UPDATED_NM,
+                A.USE_YN,
+                FN_GETCODENM('USE_YN', A.USE_YN) AS USE_YN_NM,
+                B.BOARD_TITLE,
+                A.VIEW_CNT
+        FROM    TB_FAQ A,
+                TB_BOARD B
+        WHERE   A.BOARD_ID  = B.BOARD_ID
+        AND     B.USE_YN = 'Y'
+        <if test="use_yn != null and use_yn != ''">
+        AND     A.USE_YN = #{use_yn}
+        </if>
+        <if test="board_id != null and board_id != ''">
+        AND     B.BOARD_ID = #{board_id}
+        </if>
+        <if test="search_str != null and search_str != ''">
+        AND     UPPER(A.FAQ_TITLE) LIKE  '%'||UPPER(#{search_str})||'%'
+        </if>
+        OFFSET  #{start_idx} limit #{page_per}
+    </select>
+
+    <select id="countAll" parameterType="faqEntity" resultType="int">
+        /* sql : FaqRepository.countAll */
+        SELECT  COUNT(*)
+        FROM    TB_FAQ A,
+                TB_BOARD B
+        WHERE   A.BOARD_ID  = B.BOARD_ID
+        AND     B.USE_YN = 'Y'
+        <if test="use_yn != null and use_yn != ''">
+        AND     A.USE_YN = #{use_yn}
+        </if>
+        <if test="board_id != null and board_id != ''">
+        AND     B.BOARD_ID = #{board_id}
+        </if>
+        <if test="search_str != null and search_str != ''">
+        AND     UPPER(A.FAQ_TITLE) LIKE  '%'||UPPER(#{search_str})||'%'
+        </if>
+    </select>
+
+    <insert id="save" parameterType="faqEntity">
+        /* sql : FaqRepository.save */
+        INSERT INTO TB_FAQ
+        (
+            FAQ_ID,
+            BOARD_ID,
+            FAQ_TITLE,
+            MAIN_TEXT,
+            CREATED_ID,
+            CREATED_AT,
+            UPDATED_ID,
+            UPDATED_AT
+        )
+        VALUES
+        (
+            'FQ'||LPAD(nextval('SEQ_FAQ')||'', 8, '0'),
+            #{board_id},
+            #{faq_title},
+            #{main_text},
+            #{created_id},
+            now(),
+            #{created_id},
+            now()
+        )
+    </insert>
+
+    <select id="findByFaqId" parameterType="String" resultType="faqEntity">
+        /* sql : FaqRepository.findByFaqId */
+        SELECT  A.FAQ_ID,
+                A.BOARD_ID,
+                A.FAQ_TITLE,
+                TO_CHAR(A.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT,
+                A.UPDATED_ID,
+                FN_GETUSERNM(A.UPDATED_ID) AS UPDATED_NM,
+                A.USE_YN,
+                FN_GETCODENM('USE_YN', A.USE_YN) AS USE_YN_NM,
+                B.BOARD_TITLE,
+                A.MAIN_TEXT,
+                A.VIEW_CNT
+        FROM    TB_FAQ A,
+                TB_BOARD B
+        WHERE   A.BOARD_ID  = B.BOARD_ID
+          AND   B.USE_YN = 'Y'
+          and   A.FAQ_ID = #{faq_id}
+    </select>
+
+    <update id="update" parameterType="faqEntity">
+        /* sql : FaqRepository.update */
+        UPDATE  TB_FAQ
+        SET     UPDATED_AT = now()
+        <if test="updated_id != null and updated_id != ''">
+                , UPDATED_ID = #{updated_id}
+        </if>
+        <if test="faq_title != null and faq_title != ''">
+                , FAQ_TITLE = #{faq_title}
+        </if>
+        <if test="main_text != null and main_text != ''">
+                , MAIN_TEXT = #{main_text}
+        </if>
+        <if test="use_yn != null and use_yn != ''">
+                , USE_YN = #{use_yn}
+        </if>
+        <if test="view != null and view != ''">
+                , VIEW_CNT = COALESCE(VIEW_CNT, 0) + 1
+        </if>
+        WHERE   FAQ_ID = #{faq_id}
+    </update>
+
+</mapper>

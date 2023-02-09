@@ -1,6 +1,6 @@
 package com.back.support;
 
-import com.back.domain.LoginEntity;
+import com.back.admin.domain.LoginEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,14 +27,20 @@ public class JwtUtils {
 
     private String secretKey = "reolino";
 
+    @Value("${token.long}")
+    String tokenLong;
+
     // 토큰 유효시간 4시간
-    private final long tokenValidTime = 4 * 60 * 60 * 1000L;
+    private long tokenValidTime = 4 * 60 * 60 * 1000L;
 
     public String generateToken(LoginEntity loginEntity) {
+        // 토큰 유효시간 1년으로 처리
+        if("Y".equals(tokenLong)){
+            tokenValidTime = 30 * 24 * 60 * 60 * 12 * 1000L;
+        }
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, loginEntity);
     }
-
 
     public String generateRefreshToken(LoginEntity loginEntity) {
         Map<String, Object> claims = new HashMap<>();

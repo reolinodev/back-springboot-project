@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.back.admin.repository.MenuRepository">
+
+    <select id="findMenuTreeByAuthRole" parameterType="string" resultType="menuEntity">
+        /* sql : MenuRepository.findMenuTreeByAuthRole */
+        WITH RECURSIVE RECUR_DATA AS(
+            SELECT  MENU_ID,
+                    MENU_NM,
+                    MENU_LV,
+                    PRN_MENU_ID,
+                    URL,
+                    ORD,
+                    MENU_TYPE,
+                    USE_YN,
+                    '' || MENU_ID AS MENU_IDS,
+                    ORD AS PRN_ORD
+            FROM    TB_MENU
+            WHERE   MENU_LV = 1 AND AUTH_ROLE = #{auth_role}
+            UNION
+            SELECT  B.MENU_ID,
+                    B.MENU_NM,
+                    B.MENU_LV,
+                    B.PRN_MENU_ID,
+                    B.URL,
+                    B.ORD,
+                    B.MENU_TYPE,
+                    B.USE_YN,
+                    A.MENU_IDS || ',' || B.MENU_ID AS MENU_IDS,
+                    A.ORD AS PRN_ORD
+            FROM    RECUR_DATA A
+            INNER JOIN TB_MENU B ON A.MENU_ID = B.PRN_MENU_ID AND B.AUTH_ROLE = #{auth_role}
+        )
+        SELECT  MENU_ID,
+                MENU_NM,
+                MENU_LV,
+                PRN_MENU_ID,
+                URL,
+                ORD,
+                MENU_TYPE,
+                USE_YN,
+                (SELECT MENU_NM FROM TB_MENU A WHERE A.MENU_ID = B.PRN_MENU_ID) AS PRN_MENU_NM
+        FROM    RECUR_DATA B
+        ORDER BY PRN_ORD, MENU_IDS, ORD
+    </select>
+
+
+    <insert id="save" parameterType="menuEntity">
+        /* sql : MenuRepository.save */
+        INSERT INTO TB_MENU
+        (
+            MENU_ID,
+            MENU_NM,
+            MENU_LV,
+            <if test="menu_lv != 1">
+            PRN_MENU_ID,
+            </if>
+            AUTH_ROLE,
+            URL,
+            ORD,
+            MENU_TYPE,
+            USE_YN,
+            MAIN_YN,
+            CREATED_ID,
+            CREATED_AT
+        )
+        VALUES
+        (
+            'MN'||LPAD(NEXTVAL('SEQ_MENU')||'', 8, '0'),
+            #{menu_nm},
+            #{menu_lv},
+            <if test="menu_lv != 1">
+            #{prn_menu_id},
+            </if>
+            #{auth_role},
+            #{url},
+            #{ord},
+            #{menu_type},
+            #{use_yn},
+            #{main_yn},
+            #{created_id},
+            now()
+        )
+    </insert>
+
+    <update id="update" parameterType="menuEntity">
+        /* sql : MenuRepository.update */
+        UPDATE 	TB_MENU
+        SET 	UPDATED_AT = now()
+                , UPDATED_ID = #{updated_id}
+        <if test="all_main_yn != null and all_main_yn != ''">
+                , MAIN_YN = #{all_main_yn}
+        </if>
+    </update>
+
+    <update id="updateByMenuId" parameterType="menuEntity">
+        /* sql : MenuRepository.updateByMenuId */
+        UPDATE 	TB_MENU
+        SET 	UPDATED_AT = now()
+              , UPDATED_ID = #{updated_id}
+              , MENU_NM = #{menu_nm}
+              , URL = #{url}
+              , ORD = #{ord}
+              , MENU_TYPE = #{menu_type}
+              , USE_YN = #{use_yn}
+              , MAIN_YN = #{main_yn}
+        WHERE 	MENU_ID = #{menu_id}
+    </update>
+
+    <select id="findByMenuId" parameterType="String" resultType="menuEntity">
+        /* sql : MenuRepository.findByMenuId */
+        SELECT MENU_ID,
+               MENU_NM,
+               MENU_LV,
+               PRN_MENU_ID,
+               URL,
+               ORD,
+               MENU_TYPE,
+               USE_YN,
+               MAIN_YN,
+               AUTH_ROLE
+        FROM   TB_MENU
+        WHERE  MENU_ID = #{menu_id}
+    </select>
+
+
+    <select id="countByMenuLvAndPrnMenuId" parameterType="menuEntity" resultType="int">
+        /* sql : MenuRepository.countByMenuLvAndPrnMenuId */
+        SELECT  COUNT(*)
+        FROM    TB_MENU
+        WHERE   MENU_LV = #{menu_lv}
+          AND   PRN_MENU_ID = #{menu_id}
+    </select>
+
+    <delete id="deleteByMenuId" parameterType="String">
+        /* sql : MenuRepository.deleteByMenuId */
+        DELETE  FROM TB_MENU
+        WHERE   MENU_ID = #{menu_id}
+    </delete>
+
+    <select id="findByMenuLvAndPrnMenuId" parameterType="menuEntity" resultType="menuEntity">
+        /* sql : MenuRepository.findByMenuLvAndPrnMenuId */
+        SELECT  MENU_ID,
+                MENU_NM,
+                MENU_LV,
+                PRN_MENU_ID,
+                URL,
+                ORD,
+                MENU_TYPE,
+                USE_YN
+        FROM    TB_MENU
+        WHERE   MENU_LV = #{menu_lv}
+          AND   PRN_MENU_ID = #{menu_id}
+        ORDER BY CAST(ORD AS INTEGER) ASC
+    </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <select id="findByMenuLvAndAuthId" parameterType="menuEntity" resultType="menuEntity">
+        /* sql : MenuRepository.findByMenuLvAndAuthId */
+        SELECT  A.MENU_ID,
+                A.MENU_NM,
+                A.MENU_LV,
+                (SELECT MENU_NM FROM TB_MENU C WHERE C.MENU_ID = A.PRN_MENU_ID) AS PRN_MENU_NM,
+                A.PRN_MENU_ID,
+                A.URL,
+                A.ORD,
+                A.MENU_TYPE,
+                A.USE_YN,
+                B.AUTH_ID
+        FROM    TB_MENU A
+                LEFT OUTER JOIN TB_AUTH_MENU B
+                ON A.MENU_ID = B.MENU_ID
+        WHERE   A.MENU_LV = #{menu_lv}
+          AND   B.AUTH_ID = #{auth_id}
+          AND   A.USE_YN = 'Y'
+          AND   B.USE_YN = 'Y'
+        ORDER BY CAST(ORD AS INTEGER) ASC
+    </select>
+
+    <select id="findByMainUrl" parameterType="menuEntity" resultType="menuEntity">
+        /* sql : MenuRepository.findByMainUrl */
+        SELECT  MENU_ID
+             , MENU_NM
+             , MENU_LV
+             , PRN_MENU_ID
+             , URL
+             , PRN_MENU_NM
+        FROM    (
+                    SELECT *
+                    FROM   (
+                               SELECT MENU_ID,
+                                      MENU_NM,
+                                      MENU_LV,
+                                      PRN_MENU_ID,
+                                      URL,
+                                      '메인' AS PRN_MENU_NM,
+                                      1 AS ORD
+                               FROM TB_MENU
+                               WHERE URL = (
+                                             SELECT MAIN_URL
+                                             FROM TB_AUTH 
+                                             WHERE AUTH_ID = #{auth_id}
+                                            )
+                           ) A
+                    UNION ALL
+                    SELECT *
+                    FROM   (
+                               SELECT   A.MENU_ID
+                                        , A.MENU_NM
+                                        , A.MENU_LV
+                                        , A.PRN_MENU_ID
+                                        , A.URL
+                                        , (SELECT MENU_NM FROM TB_MENU C WHERE C.MENU_ID = A.PRN_MENU_ID) AS PRN_MENU_NM
+                                        , 2 AS ORD
+                               FROM     TB_MENU A
+                                        LEFT OUTER JOIN TB_AUTH_MENU B
+                                        ON  A.MENU_ID = B.MENU_ID
+                               WHERE    A.MAIN_YN = 'Y'
+                                 AND    A.USE_YN = 'Y'
+                                 AND    B.AUTH_ID = #{auth_id}
+                           ) B
+                    UNION ALL
+                    SELECT *
+                    FROM   (
+                               SELECT   A.MENU_ID
+                                        , A.MENU_NM
+                                        , A.MENU_LV
+                                        , A.PRN_MENU_ID
+                                        , A.URL
+                                        , (SELECT MENU_NM FROM TB_MENU C WHERE C.MENU_ID = A.PRN_MENU_ID) AS PRN_MENU_NM
+                                        , 3 AS ORD
+                               FROM     TB_MENU A
+                                        LEFT OUTER JOIN TB_AUTH_MENU B
+                                        ON A.MENU_ID = B.MENU_ID
+                               WHERE    A.USE_YN = 'Y'
+                                 AND    A.MENU_LV = 2
+                                 AND    B.AUTH_ID = #{auth_id}
+                               ORDER BY A.CREATED_AT ASC
+                                   LIMIT 1
+                           ) C
+                ) A
+        ORDER BY ORD ASC
+        LIMIT 1
+    </select>
+
+</mapper>

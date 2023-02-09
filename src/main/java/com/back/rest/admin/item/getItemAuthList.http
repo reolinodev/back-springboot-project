@@ -1,0 +1,2 @@
+GET http://localhost:8080/api/item/auth/use-yn/Y
+Content-Type: application/json

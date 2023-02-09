@@ -1,0 +1,9 @@
+POST http://localhost:8080/api/certification
+Content-Type: application/json
+
+{
+  "login_id": "reolino2@gmail.com",
+  "user_pw" : "1111",
+  "login_device" : "WEB",
+  "device_browser" : "Chrome"
+}

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.back.admin.repository.CodeRepository">
+
+    <select id="findByCodeGrpId" parameterType="String" resultType="codeEntity">
+        /* sql : codeRepository.findByCodeGrpId */
+        SELECT *
+        FROM (
+                 SELECT CODE_ID,
+                        CODE_GRP_ID,
+                        CODE_NM,
+                        CODE_VAL,
+                        MEMO,
+                        ORD,
+                        CASE WHEN ORD = '' THEN '99999'
+                        ELSE ORD END AS ORDS,
+                        USE_YN,
+                        CREATED_AT,
+                        CREATED_ID,
+                        UPDATED_AT,
+                        UPDATED_ID
+                 FROM TB_CODE
+                 WHERE CODE_GRP_ID = #{code_grp_id}
+             ) A
+        ORDER BY CAST(ORDS AS INTEGER) asc, CODE_ID asc
+    </select>
+
+    <insert id="save" parameterType="code">
+        /* sql : codeRepository.save */
+        INSERT INTO TB_CODE
+        (
+            CODE_ID,
+            CODE_GRP_ID,
+            CODE_NM,
+            CODE_VAL,
+            MEMO,
+            ORD,
+            CREATED_AT,
+            CREATED_ID
+        )
+        VALUES
+        (
+            'CD'||LPAD(nextval('SEQ_CD')||'', 8, '0'),
+            #{code_grp_id},
+            #{code_nm},
+            #{code_val},
+            #{memo},
+            #{ord},
+            now(),
+            #{created_id}
+        )
+    </insert>
+
+    <update id="update" parameterType="code">
+        /* sql : codeRepository.update */
+        UPDATE  TB_CODE
+        SET     UPDATED_AT = now()
+                , UPDATED_ID = #{updated_id}
+                , MEMO = #{memo}
+                , ORD = #{ord}
+                , CODE_NM = #{code_nm}
+                , USE_YN = #{use_yn}
+        WHERE   CODE_ID = #{code_id}
+    </update>
+
+    <delete id="deleteByCodeId" parameterType="String">
+        /* sql : codeRepository.deleteByCodeId */
+        DELETE
+        FROM TB_CODE
+        WHERE CODE_ID = #{code_id}
+    </delete>
+
+    <!-- -->
+    <select id="findByCodeGrpVal" parameterType="string" resultType="codeEntity">
+        /* sql : codeRepository.findByCodeGrpVal */
+        SELECT *
+        FROM (
+                 SELECT A.CODE_ID,
+                        A.CODE_NM,
+                        A.CODE_VAL,
+                        A.CODE_GRP_ID,
+                        CASE WHEN ORD = '' THEN '99999'
+                             ELSE ORD END AS ORDS
+                 FROM TB_CODE A,
+                      TB_CODE_GRP B
+                 WHERE A.CODE_GRP_ID = B.CODE_GRP_ID
+                   AND B.CD_GRP_VAL = #{code_grp_val}
+                   AND A.USE_YN = 'Y'
+                   AND B.USE_YN = 'Y'
+             ) A
+        ORDER BY CAST(A.ORDS AS INTEGER) ASC
+    </select>
+
+</mapper>

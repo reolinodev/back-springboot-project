@@ -1,0 +1,2 @@
+GET http://localhost:8080/api/item/auth/mine/US00000002
+Content-Type: application/json

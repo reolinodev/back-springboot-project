@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.back.admin.repository.ItemRepository">
+
+    <select id="findCodeByCodeGrpVal" parameterType="string" resultType="code">
+        /* sql : ItemRepository.findByCodeGrpVal */
+        SELECT *
+        FROM (
+                 SELECT A.CODE_ID,
+                        A.CODE_NM,
+                        A.CODE_VAL,
+                        A.CODE_GRP_ID,
+                        CASE WHEN ORD = '' THEN '99999'
+                             ELSE ORD END AS ORDS
+                 FROM TB_CODE A,
+                      TB_CODE_GRP B
+                 WHERE A.CODE_GRP_ID = B.CODE_GRP_ID
+                   AND B.CODE_GRP_VAL = #{code_grp_val}
+                   AND A.USE_YN = 'Y'
+                   AND B.USE_YN = 'Y'
+             ) A
+        ORDER BY CAST(A.ORDS AS INTEGER) ASC
+    </select>
+
+    <select id="findAuthByUseYn" parameterType="string" resultType="authEntity">
+        /* sql : ItemRepository.findAuthByUseYn */
+        SELECT  AUTH_ID,
+                AUTH_NM,
+                AUTH_VAL ,
+                AUTH_ROLE,
+                USE_YN,
+                ORD,
+                MEMO,
+                CREATED_ID,
+                CREATED_AT,
+                UPDATED_ID,
+                UPDATED_AT
+        FROM    TB_AUTH
+        WHERE   USE_YN= #{use_yn}
+    </select>
+
+    <select id="findAuthByAuthRole" parameterType="string" resultType="authEntity">
+        /* sql : ItemRepository.findAuthByAuthRole */
+        SELECT  AUTH_ID,
+                AUTH_NM,
+                AUTH_VAL ,
+                AUTH_ROLE,
+                USE_YN,
+                ORD,
+                MEMO,
+                CREATED_ID,
+                CREATED_AT,
+                UPDATED_ID,
+                UPDATED_AT
+        FROM    TB_AUTH
+        WHERE   AUTH_ROLE= #{auth_role}
+        AND     USE_YN = 'Y'
+    </select>
+
+    <select id="findAuthByUserId" parameterType="string" resultType="authEntity">
+        /* sql : ItemRepository.findAuthByUserId */
+        SELECT  A.AUTH_ID,
+                A.AUTH_NM,
+                A.AUTH_VAL ,
+                A.AUTH_ROLE,
+                A.ORD
+        FROM    TB_AUTH A
+                LEFT OUTER JOIN TB_USER_AUTH B
+                ON A.AUTH_ID = B.AUTH_ID
+        WHERE   A.USE_YN = 'Y'
+          AND   B.USER_ID = #{user_id}
+        ORDER BY CAST(ORD AS INTEGER) ASC
+    </select>
+
+    <select id="findMenuByMenuLv" parameterType="int" resultType="menuEntity">
+        /* sql : ItemRepository.findMenuByMenuLv */
+        SELECT  MENU_ID,
+                MENU_NM,
+                MENU_LV,
+                PRN_MENU_ID,
+                URL,
+                ORD,
+                MENU_TYPE,
+                USE_YN
+        FROM    TB_MENU
+        WHERE   MENU_LV = #{menu_lv}
+        ORDER BY CAST(ORD AS INTEGER) ASC
+    </select>
+
+    <select id="findBoardByUseYn" parameterType="string" resultType="boardEntity">
+        /* sql : ItemRepository.findBoardByUseYn */
+        SELECT  BOARD_ID,
+                BOARD_TITLE,
+                USE_YN
+        FROM    TB_BOARD
+        WHERE   USE_YN =#{use_yn}
+        ORDER BY BOARD_ID
+    </select>
+
+</mapper>

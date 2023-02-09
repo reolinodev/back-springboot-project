@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.back.admin.repository.AuthRepository">
+
+    <select id="countByAuthCd" parameterType="authEntity" resultType="int">
+        /* sql : AuthRepository.countByAuthVal */
+        SELECT  COUNT(*)
+        FROM    TB_AUTH
+        WHERE   AUTH_VAL  = #{auth_val}
+    </select>
+
+    <select id="findAll" parameterType="authEntity" resultType="authEntity">
+        /* sql : AuthRepository.findAll */
+        SELECT  ROW_NUMBER() OVER (ORDER BY AUTH_ID ASC) RNUM,
+                AUTH_ID,
+                AUTH_NM,
+                AUTH_VAL ,
+                AUTH_ROLE,
+                USE_YN,
+                FN_GETCODENM('USE_YN', USE_YN) AS USE_YN_NM,
+                ORD,
+                MEMO,
+                CREATED_ID,
+                CREATED_AT,
+                UPDATED_ID,
+                UPDATED_AT
+        FROM    TB_AUTH
+        WHERE   1=1
+        <if test="use_yn != null and use_yn != ''">
+        AND     USE_YN = #{use_yn}
+        </if>
+        <if test="search_str != null and search_str != ''">
+        AND 	(UPPER(AUTH_NM) LIKE  '%'||UPPER(#{search_str})||'%'
+        OR 		UPPER(AUTH_VAL ) LIKE  '%'||UPPER(#{search_str})||'%')
+        </if>
+        OFFSET  #{start_idx} limit #{page_per};
+    </select>
+
+    <select id="countAll" parameterType="authEntity" resultType="int">
+        /* sql : AuthRepository.countAll */
+        SELECT  COUNT(*)
+        FROM    TB_AUTH
+        WHERE   1=1
+        <if test="use_yn != null and use_yn != ''">
+        AND     USE_YN = #{use_yn}
+        </if>
+        <if test="search_str != null and search_str != ''">
+        AND 	(UPPER(AUTH_NM) LIKE  '%'||UPPER(#{search_str})||'%'
+        OR 		UPPER(AUTH_VAL ) LIKE  '%'||UPPER(#{search_str})||'%')
+        </if>
+    </select>
+
+    <insert id="save" parameterType="authEntity">
+        /* sql : AuthRepository.save */
+        INSERT INTO TB_AUTH
+        (
+            AUTH_ID,
+            AUTH_NM,
+            AUTH_VAL ,
+            AUTH_ROLE,
+        <if test="ord != null and ord != ''">
+            ORD,
+        </if>
+        <if test="memo != null and memo != ''">
+            MEMO,
+        </if>
+            CREATED_ID,
+            CREATED_AT
+        )
+        VALUES
+        (
+            'AT'||LPAD(nextval('SEQ_AUTH')||'', 8, '0'),
+            #{auth_nm},
+            #{auth_val},
+            #{auth_role},
+        <if test="ord != null and ord != ''">
+            #{ord},
+        </if>
+        <if test="memo != null and memo != ''">
+            #{memo},
+        </if>
+            #{created_id},
+            now()
+        )
+    </insert>
+
+    <update id="updateAuth" parameterType="authEntity">
+        /* sql : AuthRepository.updateAuth */
+        UPDATE  TB_AUTH
+        SET     UPDATED_AT = now()
+                , UPDATED_ID = #{updated_id}
+            <if test="auth_nm != null and auth_nm != ''">
+                , AUTH_NM = #{auth_nm}
+            </if>
+            <if test="ord != null and ord != ''">
+                , ORD = #{ord}
+            </if>
+            <if test="memo != null and memo != ''">
+                , MEMO = #{memo}
+            </if>
+            <if test="use_yn != null and use_yn != ''">
+                , USE_YN = #{use_yn}
+            </if>
+        WHERE   AUTH_ID = #{auth_id}
+    </update>
+
+    <select id="findByAuthId" parameterType="String" resultType="authEntity">
+        /* sql : AuthRepository.findByAuthId */
+        SELECT  AUTH_ID,
+                AUTH_NM,
+                AUTH_VAL ,
+                AUTH_ROLE,
+                USE_YN,
+                ORD,
+                MEMO,
+                CREATED_ID,
+                CREATED_AT,
+                UPDATED_ID,
+                UPDATED_AT
+        FROM    TB_AUTH
+        WHERE   AUTH_ID = #{auth_id}
+    </select>
+
+    <delete id="deleteByAuthId" parameterType="string">
+        DELETE FROM TB_AUTH
+        WHERE AUTH_ID = #{auth_id}
+    </delete>
+
+</mapper>

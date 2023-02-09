@@ -1,24 +1,18 @@
 package com.back.advice;
 
-import com.back.domain.common.Error;
-import com.back.domain.common.ErrorResponse;
+import com.back.domain.Error;
+import com.back.domain.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 @RestControllerAdvice
 public class GlobalControllerAdvice {
@@ -44,18 +38,18 @@ public class GlobalControllerAdvice {
             String value = field.getRejectedValue().toString();
 
             Error errorMessage = new Error();
-            errorMessage.setField(fieldName);
-            errorMessage.setMessage(message);
-            errorMessage.setInvalidValue(value);
+            errorMessage.field = fieldName;
+            errorMessage.message = message;
+            errorMessage.invalid_value = value;
 
             errorList.add(errorMessage);
         });
 
         ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setErrorList(errorList);
-        errorResponse.setMessage("전송 데이터를 확인해주세요.");
-        errorResponse.setRequestUrl(httpServletRequest.getRequestURI());
-        errorResponse.setResultCode("FAIL");
+        errorResponse.error_list = errorList;
+        errorResponse.message = "전송 데이터를 확인해주세요.";
+        errorResponse.request_url = httpServletRequest.getRequestURI();
+        errorResponse.result_code = "FAIL";
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }

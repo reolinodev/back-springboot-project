@@ -1,0 +1,14 @@
+PUT http://localhost:8080/api/board/BD00000005
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyZW9saW5vQGdtYWlsLmNvbSIsImxvZ2luX2lkIjoicmVvbGlub0BnbWFpbC5jb20iLCJ1c2VyX3B3IjoiMGZmZTFhYmQxYTA4MjE1MzUzYzIzM2Q2ZTAwOTYxM2U5NWVlYzQyNTM4MzJhNzYxYWYyOGZmMzdhYzVhMTUwYyIsInVzZXJfaWQiOiJVUzAwMDAwMDA3IiwidXNlcl9ubSI6InJlb2xpbm8iLCJleHAiOjE3MDY4NjAzMDEsImlhdCI6MTY3NTc1NjMwMX0.ZfBoVflV62RhBtFG4NNJfEFyHgadReSPO9uMui15nRA
+
+{
+  "board_title": "테스트 일반게시판",
+  "memo": "테스트 일반게시판입니다",
+  "use_yn": "Y",
+  "auth_id_arr" : ["AT00000002"]
+}
+
+
+
+

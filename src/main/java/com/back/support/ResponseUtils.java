@@ -1,17 +1,17 @@
 package com.back.support;
 
-import com.back.domain.common.JwtHeader;
+import com.back.domain.JwtHeader;
 import javax.servlet.http.HttpServletRequest;
-import com.back.domain.common.Header;
+import com.back.domain.Header;
 
 public class ResponseUtils {
 
     public static Header setHeader(String message, String code,
         HttpServletRequest httpServletRequest) {
         Header header = new Header();
-        header.setMessage(message);
-        header.setRequestUrl(httpServletRequest.getRequestURI());
-        header.setResultCode(code);
+        header.message = message;
+        header.request_url = httpServletRequest.getRequestURI();
+        header.result_code = code;
         return header;
     }
 
@@ -19,11 +19,11 @@ public class ResponseUtils {
         String refreshToken, HttpServletRequest httpServletRequest) {
 
         JwtHeader jwtHeader = new JwtHeader();
-        jwtHeader.setMessage(message);
-        jwtHeader.setRequestUrl(httpServletRequest.getRequestURI());
-        jwtHeader.setResultCode(code);
-        jwtHeader.setAccessToken(accessToken);
-        jwtHeader.setRefreshToken(refreshToken);
+        jwtHeader.message = message;
+        jwtHeader.request_url = httpServletRequest.getRequestURI();
+        jwtHeader.result_code = code;
+        jwtHeader.access_token = accessToken;
+        jwtHeader.refresh_token = refreshToken;
         return jwtHeader;
     }
 }

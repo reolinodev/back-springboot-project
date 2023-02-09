@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.back.admin.repository.PostRepository">
+
+    <select id="findAll" parameterType="postEntity" resultType="postEntity">
+        /* sql : PostRepository.findAll */
+        SELECT  ROW_NUMBER() OVER (ORDER BY A.POST_ID DESC) RNUM,
+                A.POST_ID,
+                A.BOARD_ID,
+                A.POST_TITLE,
+                A.UPDATED_ID,
+                A.USE_YN,
+                FN_GETCODENM('USE_YN', A.USE_YN) AS USE_YN_NM,
+                B.BOARD_TITLE,
+                TO_CHAR(A.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT,
+                FN_GETUSERNM(A.UPDATED_ID) AS UPDATED_NM,
+                FN_GETCODENM('BOARD_TYPE', B.BOARD_TYPE) AS BOARD_TYPE_NM,
+                A.VIEW_CNT
+        FROM    TB_POST A,
+                TB_BOARD B
+        WHERE   A.BOARD_ID  = B.BOARD_ID
+        AND     B.USE_YN = 'Y'
+        <if test="use_yn != null and use_yn != ''">
+        AND     A.USE_YN = #{use_yn}
+        </if>
+        <if test="board_id != null and board_id != ''">
+        AND     B.BOARD_ID = #{board_id}
+        </if>
+        <if test="search_str != null and search_str != ''">
+        AND     UPPER(A.POST_TITLE) LIKE  '%'||UPPER(#{search_str})||'%'
+        </if>
+        <if test="start_date != null and start_date != ''">
+        AND     TO_CHAR(A.CREATED_AT, 'YYYY-MM-DD') BETWEEN #{start_date} AND #{end_date}
+        </if>
+        OFFSET  #{start_idx} limit #{page_per}
+    </select>
+
+    <select id="countAll" parameterType="postEntity" resultType="int">
+        /* sql : PostRepository.countAll */
+        SELECT  COUNT(*)
+        FROM    TB_POST A,
+                TB_BOARD B
+        WHERE   A.BOARD_ID  = B.BOARD_ID
+        AND     B.USE_YN = 'Y'
+        <if test="use_yn != null and use_yn != ''">
+        AND     A.USE_YN = #{use_yn}
+        </if>
+        <if test="board_id != null and board_id != ''">
+        AND     B.BOARD_ID = #{board_id}
+        </if>
+        <if test="post_title != null and post_title != ''">
+        AND     UPPER(A.POST_TITLE) LIKE  '%'||UPPER(#{post_title})||'%'
+        </if>
+        <if test="start_date != null and start_date != ''">
+        AND     TO_CHAR(A.CREATED_AT, 'YYYY-MM-DD') BETWEEN #{start_date} AND #{end_date}
+        </if>
+    </select>
+
+    <insert id="save" parameterType="postEntity">
+        /* sql : PostRepository.save */
+        INSERT INTO TB_POST
+        (
+            POST_ID,
+            BOARD_ID,
+            POST_TITLE,
+            MAIN_TEXT,
+            CREATED_ID,
+            CREATED_AT,
+            UPDATED_ID,
+            UPDATED_AT
+        )
+        VALUES
+        (
+            'PT'||LPAD(nextval('SEQ_POST')||'', 8, '0'),
+            #{board_id},
+            #{post_title},
+            #{main_text},
+            #{created_id},
+            now(),
+            #{created_id},
+            now()
+        )
+    </insert>
+
+    <select id="findByPostId" parameterType="string" resultType="postEntity">
+        /* sql : PostRepository.findByPostId */
+        SELECT  A.POST_ID,
+                A.BOARD_ID,
+                A.POST_TITLE,
+                A.UPDATED_ID,
+                A.USE_YN,
+                FN_GETCODENM('USE_YN', A.USE_YN) AS USE_YN_NM,
+                B.BOARD_TITLE,
+                TO_CHAR(A.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT,
+                FN_GETUSERNM(A.UPDATED_ID) AS UPDATED_NM,
+                FN_GETCODENM('BOARD_TYPE', B.BOARD_TYPE) AS BOARD_TYPE_NM,
+                A.MAIN_TEXT,
+                A.VIEW_CNT
+        FROM    TB_POST A,
+                TB_BOARD B
+        WHERE   A.BOARD_ID  = B.BOARD_ID
+          AND   B.USE_YN = 'Y'
+          and   A.POST_ID = #{post_id}
+    </select>
+
+    <update id="update" parameterType="postEntity">
+        /* sql : PostRepository.update */
+        UPDATE  TB_POST
+        SET UPDATED_AT = now()
+        <if test="updated_id != null and updated_id != ''">
+            , UPDATED_ID = #{updated_id}
+        </if>
+        <if test="post_title != null and post_title != ''">
+            , POST_TITLE = #{post_title}
+        </if>
+        <if test="main_text != null and main_text != ''">
+            , MAIN_TEXT = #{main_text}
+        </if>
+        <if test="use_yn != null and use_yn != ''">
+            , USE_YN = #{use_yn}
+        </if>
+        <if test="view != null and view != ''">
+            , VIEW_CNT = COALESCE(VIEW_CNT, 0) + 1
+        </if>
+        WHERE POST_ID = #{post_id}
+    </update>
+
+</mapper>

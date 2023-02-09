@@ -1,0 +1,11 @@
+PUT http://localhost:8080/api/codeGrp
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyZW9saW5vQGdtYWlsLmNvbSIsImxvZ2luX2lkIjoicmVvbGlub0BnbWFpbC5jb20iLCJ1c2VyX3B3IjoiMGZmZTFhYmQxYTA4MjE1MzUzYzIzM2Q2ZTAwOTYxM2U5NWVlYzQyNTM4MzJhNzYxYWYyOGZmMzdhYzVhMTUwYyIsInVzZXJfaWQiOiJVUzAwMDAwMDA3IiwidXNlcl9ubSI6InJlb2xpbm8iLCJleHAiOjE3MDY4NjAzMDEsImlhdCI6MTY3NTc1NjMwMX0.ZfBoVflV62RhBtFG4NNJfEFyHgadReSPO9uMui15nRA
+
+{
+  "code_grp_nm": "게시판유형",
+  "code_grp_val":"BOARD_TYPE"
+}
+
+
+

@@ -1,0 +1,19 @@
+PUT http://localhost:8080/api/menuAuth
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyZW9saW5vQGdtYWlsLmNvbSIsImxvZ2luX2lkIjoicmVvbGlub0BnbWFpbC5jb20iLCJ1c2VyX3B3IjoiMGZmZTFhYmQxYTA4MjE1MzUzYzIzM2Q2ZTAwOTYxM2U5NWVlYzQyNTM4MzJhNzYxYWYyOGZmMzdhYzVhMTUwYyIsInVzZXJfaWQiOiJVUzAwMDAwMDA3IiwidXNlcl9ubSI6InJlb2xpbm8iLCJleHAiOjE3MDY3NzUyNjcsImlhdCI6MTY3NTY3MTI2N30.2coW-PVZZmG9rcmQQVbHBb2Xm4mxu9DmTVpo7COtFys
+
+{
+  "menu_id": "MN00000011",
+  "updated_rows": [
+    {
+      "auth_id" : "AT00000002",
+      "use_yn" : "Y"
+    },
+    {
+      "auth_id" : "AT00000003",
+      "use_yn" : "Y"
+    }
+  ]
+}
+
+

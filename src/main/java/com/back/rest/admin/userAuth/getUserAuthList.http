@@ -1,0 +1,11 @@
+POST http://localhost:8080/api/userAuth
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyZW9saW5vQGdtYWlsLmNvbSIsImxvZ2luX2lkIjoicmVvbGlub0BnbWFpbC5jb20iLCJ1c2VyX3B3IjoiMGZmZTFhYmQxYTA4MjE1MzUzYzIzM2Q2ZTAwOTYxM2U5NWVlYzQyNTM4MzJhNzYxYWYyOGZmMzdhYzVhMTUwYyIsInVzZXJfaWQiOiJVUzAwMDAwMDA3IiwidXNlcl9ubSI6InJlb2xpbm8iLCJleHAiOjE2NzU0MDU1MTUsImlhdCI6MTY3NTM5MTExNX0.OhC_MeDqwY4zEEIcafQdOAFTHPc-4vvhqFrvwgke2V0
+
+{
+  "auth_id": "AT00000002",
+  "search_str":"reolino",
+  "page_per": 10,
+  "current_page": 1
+}
+

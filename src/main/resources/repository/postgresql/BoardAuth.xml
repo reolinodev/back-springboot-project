@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.back.admin.repository.BoardAuthRepository">
+
+    <insert id="save" parameterType="boardEntity">
+        /* sql : BoardAuthRepository.save */
+        INSERT INTO TB_BOARD_AUTH
+        (
+            BOARD_ID,
+            AUTH_ID,
+            CREATED_ID,
+            CREATED_AT
+        )
+        VALUES
+        (
+            #{board_id},
+            #{auth_id},
+            #{created_id},
+            now()
+        )
+    </insert>
+
+    <delete id="deleteByBoardId" parameterType="String">
+        /* sql : BoardAuthRepository.deleteByBoardId */
+        DELETE FROM TB_BOARD_AUTH
+        WHERE   BOARD_ID = #{board_id}
+    </delete>
+
+
+    <select id="findByBoardId" parameterType="String" resultType="boardAuth">
+        /* sql : BoardAuthRepository.findByBoardId */
+        SELECT  BOARD_ID,
+                AUTH_ID,
+                CREATED_ID,
+                CREATED_AT
+        FROM    TB_BOARD_AUTH
+        WHERE   BOARD_ID = #{board_id}
+    </select>
+
+    <select id="countByAuthIdAndBoardId" parameterType="postEntity" resultType="int">
+        /* sql : BoardAuthRepository.countByAuthIdAndBoardId */
+        SELECT  COUNT(*) AS cnt
+        FROM    TB_BOARD_AUTH
+        WHERE   BOARD_ID = #{board_id}
+          AND   AUTH_ID = #{auth_id}
+    </select>
+</mapper>

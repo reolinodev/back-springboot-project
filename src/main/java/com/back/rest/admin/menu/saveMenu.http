@@ -1,0 +1,14 @@
+PUT http://localhost:8080/api/menu
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyZW9saW5vQGdtYWlsLmNvbSIsImxvZ2luX2lkIjoicmVvbGlub0BnbWFpbC5jb20iLCJ1c2VyX3B3IjoiMGZmZTFhYmQxYTA4MjE1MzUzYzIzM2Q2ZTAwOTYxM2U5NWVlYzQyNTM4MzJhNzYxYWYyOGZmMzdhYzVhMTUwYyIsInVzZXJfaWQiOiJVUzAwMDAwMDA3IiwidXNlcl9ubSI6InJlb2xpbm8iLCJleHAiOjE3MDY3NzUyNjcsImlhdCI6MTY3NTY3MTI2N30.2coW-PVZZmG9rcmQQVbHBb2Xm4mxu9DmTVpo7COtFys
+
+{
+  "menu_nm": "테스트관리",
+  "menu_lv": 1,
+  "url" : "",
+  "auth_role": "ADMIN",
+  "ord" : "4",
+  "menu_type" : "url",
+  "use_yn" : "Y",
+  "main_yn" : "N"
+}

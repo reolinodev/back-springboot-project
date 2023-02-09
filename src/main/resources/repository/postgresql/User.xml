@@ -1,46 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.back.repository.UserRepository">
+<mapper namespace="com.back.admin.repository.UserRepository">
 
-    <select id="findAll" parameterType="user" resultType="user">
-        SELECT  USER_ID,
-                LOGIN_ID,
-                USER_NM,
-                USER_PW,
-                TEL_NO,
-                USE_YN,
-                CREATED_AT,
-                UPDATED_AT,
-                CREATED_ID,
-                UPDATED_ID
-        FROM    TB_USER
-        WHERE 1=1
-        <if test='login_id != "" and login_id != null'>
-            AND LOGIN_ID = #{login_id}
-        </if>
-        <if test='user_nm != "" and user_nm != null'>
-            AND USER_NM = #{user_nm}
-        </if>
+    <select id="countByLoginId" parameterType="string" resultType="int">
+        /* sql : UserRepository.countByLoginId */
+        SELECT  COUNT(*)
+        FROM 	TB_USER
+        WHERE	LOGIN_ID = #{login_id}
     </select>
 
-    <select id="findById" parameterType="string" resultType="user">
-        SELECT  USER_ID,
-                LOGIN_ID,
-                USER_NM,
-                USER_PW,
-                TEL_NO,
-                USE_YN,
-                CREATED_AT,
-                UPDATED_AT,
-                CREATED_ID,
-                UPDATED_ID
-        FROM    TB_USER
-        WHERE   USER_ID = #{user_id}
-    </select>
-
-
-    <insert id="save" parameterType="user">
+    <insert id="save" parameterType="userEntity">
         /* sql : UserRepository.save */
         INSERT INTO TB_USER (
             USER_ID,
@@ -63,10 +33,10 @@
     </insert>
 
 
-    <update id="update" parameterType="user">
+    <update id="update" parameterType="userEntity">
         UPDATE TB_USER
         SET  UPDATED_AT = now()
-            ,UPDATED_ID = #{updated_id}
+        ,UPDATED_ID = #{updated_id}
         <if test='user_nm != "" and user_nm != null'>
             , USER_NM = #{user_nm}
         </if>
@@ -80,7 +50,64 @@
     </update>
 
 
-    <delete id="deleteById" parameterType="string">
+    <select id="findAll" parameterType="userEntity" resultType="userEntity">
+        SELECT  ROW_NUMBER() OVER (ORDER BY USER_ID DESC) RNUM,
+                USER_ID,
+                LOGIN_ID,
+                USER_NM,
+                USER_PW,
+                TEL_NO,
+                USE_YN,
+                FN_GETCODENM('USE_YN', USE_YN) AS USE_YN_NM,
+                CREATED_AT,
+                UPDATED_AT,
+                CREATED_ID,
+                UPDATED_ID
+        FROM    TB_USER
+        WHERE 1=1
+        <if test="search_str != null and search_str != ''">
+        AND 	(UPPER(LOGIN_ID) LIKE '%'||UPPER(#{search_str})||'%'
+        OR 		UPPER(USER_NM) LIKE '%'||UPPER(#{search_str})||'%')
+        </if>
+        <if test="use_yn != null and use_yn != ''">
+        AND 	USE_YN = #{use_yn}
+        </if>
+        ORDER BY USER_ID DESC
+        OFFSET 	#{start_idx} limit #{page_per}
+    </select>
+
+
+    <select id="countByAll" parameterType="userEntity" resultType="int">
+        SELECT  COUNT(*)
+        FROM    TB_USER
+        WHERE 1=1
+        <if test="search_str != null and search_str != ''">
+            AND 	(UPPER(LOGIN_ID) LIKE '%'||UPPER(#{search_str})||'%'
+            OR 		UPPER(USER_NM) LIKE '%'||UPPER(#{search_str})||'%')
+        </if>
+        <if test="use_yn != null and use_yn != ''">
+            AND 	USE_YN = #{use_yn}
+        </if>
+    </select>
+
+
+    <select id="findByUserId" parameterType="string" resultType="userEntity">
+        SELECT  USER_ID,
+                LOGIN_ID,
+                USER_NM,
+                USER_PW,
+                TEL_NO,
+                USE_YN,
+                FN_GETCODENM('USE_YN', USE_YN) AS USE_YN_NM,
+                CREATED_AT,
+                UPDATED_AT,
+                CREATED_ID,
+                UPDATED_ID
+        FROM    TB_USER
+        WHERE   USER_ID = #{user_id}
+    </select>
+
+    <delete id="deleteByUserid" parameterType="string">
         DELETE FROM TB_USER
         WHERE USER_ID = #{user_id}
     </delete>

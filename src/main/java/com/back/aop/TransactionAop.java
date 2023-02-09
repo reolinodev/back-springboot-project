@@ -21,7 +21,7 @@ import java.util.Collections;
 public class TransactionAop {
 	
     private static final String AOP_TRANSACTION_METHOD_NAME="*";
-    private static final String AOP_TRANSACTION_EXPRESSION="execution(* com.back.service..*(..))";
+    private static final String AOP_TRANSACTION_EXPRESSION="execution(* com.back.admin.service..*(..))";
 
     @Autowired
     private TransactionManager transactionManager;

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.back.admin.repository.UserAuthRepository">
+
+    <select id="findAll" parameterType="userAuthEntity" resultType="userAuthEntity">
+        /* sql : UserAuthRepository.findAll */
+        SELECT  ROW_NUMBER() OVER (ORDER BY A.AUTH_ID ASC, A.CREATED_AT DESC) RNUM,
+                A.USER_ID,
+                A.AUTH_ID,
+                C.USER_NM,
+                C.LOGIN_ID,
+                B.AUTH_NM,
+                B.AUTH_ROLE
+        -- WS.FN_GETCODENM('CORP_CD', C.CORP_CD) as CORP_NM
+        FROM    TB_USER_AUTH A, TB_AUTH B, TB_USER C
+        WHERE   A.AUTH_ID = B.AUTH_ID
+        AND     A.USER_ID = C.USER_ID
+        AND     A.USE_YN = 'Y'
+        AND     B.USE_YN = 'Y'
+        AND     C.USE_YN = 'Y'
+        <if test="auth_id != null and auth_id != ''">
+        AND     A.AUTH_ID = #{auth_id}
+        </if>
+        <if test="search_str != null and search_str != ''">
+        AND     (UPPER(C.LOGIN_ID) LIKE  '%'||UPPER(#{search_str})||'%'
+        OR      UPPER(C.USER_NM) LIKE  '%'||UPPER(#{search_str})||'%')
+        </if>
+        ORDER BY A.AUTH_ID ASC, A.CREATED_AT DESC
+        OFFSET  #{start_idx} limit #{page_per}
+    </select>
+
+    <select id="countAll" parameterType="userAuthEntity" resultType="int">
+        /* sql : UserAuthRepository.countAll */
+        SELECT  COUNT (*)
+        FROM    TB_USER_AUTH A, TB_AUTH B, TB_USER C
+        WHERE   A.AUTH_ID = B.AUTH_ID
+        AND     A.USER_ID = C.USER_ID
+        AND     A.USE_YN = 'Y'
+        AND     B.USE_YN = 'Y'
+        AND     C.USE_YN = 'Y'
+        <if test="auth_role != null and auth_role != ''">
+        AND     B.AUTH_ROLE = #{auth_role}
+        </if>
+        <if test="auth_id != null and auth_id != ''">
+        AND     A.AUTH_ID = #{auth_id}
+        </if>
+        <if test="search_str != null and search_str != ''">
+        AND     (UPPER(C.LOGIN_ID) LIKE  '%'||UPPER(#{search_str})||'%'
+        OR      UPPER(C.USER_NM) LIKE  '%'||UPPER(#{search_str})||'%')
+        </if>
+    </select>
+
+    <select id="findAllInputUser" parameterType="userAuthEntity" resultType="userAuthEntity">
+        /* sql : UserAuthRepository.findAllInputUser */
+        SELECT  ROW_NUMBER() OVER (ORDER BY USER_ID DESC) RNUM,
+                USER_ID,
+                LOGIN_ID,
+                USER_NM
+        FROM    TB_USER
+        WHERE   USE_YN = 'Y'
+        AND     USER_ID NOT IN (
+                SELECT  USER_ID
+                FROM    TB_USER_AUTH
+                WHERE   AUTH_ID =  #{auth_id}
+                AND     USE_YN = 'Y'
+        )
+        <if test="search_str != null and search_str != ''">
+        AND (UPPER(LOGIN_ID) LIKE  '%'||UPPER(#{search_str})||'%'
+        OR UPPER(USER_NM) LIKE  '%'||UPPER(#{search_str})||'%')
+        </if>
+        ORDER BY USER_ID DESC
+        OFFSET  #{start_idx} limit #{page_per}
+    </select>
+
+    <select id="countByInputUser" parameterType="userAuthEntity" resultType="int">
+        /* sql : UserAuthRepository.countByInputUser */
+        SELECT  COUNT(*)
+        FROM    TB_USER A
+        WHERE   A.USE_YN = 'Y'
+        AND     USER_ID NOT IN (
+                SELECT USER_ID
+                FROM TB_USER_AUTH
+                WHERE AUTH_ID =  #{auth_id}
+                AND USE_YN = 'Y'
+        )
+        <if test="search_str != null and search_str != ''">
+            AND (UPPER(LOGIN_ID) LIKE  '%'||UPPER(#{search_str})||'%'
+            OR UPPER(USER_NM) LIKE  '%'||UPPER(#{search_str})||'%')
+        </if>
+    </select>
+
+    <insert id="save" parameterType="userAuthEntity">
+        /* sql : UserAuthRepository.save */
+        WITH UPSERT AS (
+        UPDATE  TB_USER_AUTH
+        SET     USE_YN = 'Y'
+                , UPDATED_AT = now()
+                , UPDATED_ID = #{updated_id}
+        WHERE   USER_ID = #{user_id}
+        AND     AUTH_ID = #{auth_id}
+        RETURNING *
+        )
+        INSERT INTO TB_USER_AUTH (USER_ID, AUTH_ID, CREATED_ID, CREATED_AT)
+        SELECT  #{user_id}, #{auth_id},  #{updated_id} ,now()
+        WHERE NOT EXISTS(SELECT * FROM UPSERT)
+    </insert>
+
+    <update id="deleteUserAuth" parameterType="userAuthEntity">
+        /* sql : UserAuthRepository.deleteUserAuth */
+        UPDATE  TB_USER_AUTH
+        SET     UPDATED_AT = now()
+                , UPDATED_ID = #{updated_id}
+                , USE_YN = 'N'
+        WHERE   AUTH_ID = #{auth_id}
+        AND     USER_ID  = #{user_id}
+    </update>
+
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.back.admin.repository.MenuAuthRepository">
+
+    <select id="findByMenuId" parameterType="String" resultType="menuAuthEntity">
+        /* sql : MenuAuthRepository.findByMenuId */
+        SELECT    A.AUTH_ID
+                 , A.AUTH_NM
+                 , COALESCE(B.USE_YN, 'N') AS USE_YN
+                 , TO_CHAR(B.UPDATED_AT, 'YYYY-MM-DD HH24:MI') AS UPDATED_AT
+                 , CASE WHEN B.UPDATED_ID IS NULL THEN ''
+                        ELSE (SELECT FN_GETUSERNM(B.UPDATED_ID))
+                    END  AS UPDATED_NM
+        FROM    (
+                    SELECT  A.AUTH_ID
+                         , A.AUTH_NM
+                         , CASE WHEN ORD = '' OR ORD IS NULL THEN '99'
+                                ELSE ORD
+                            END AS ORD
+                    FROM    TB_AUTH A
+                    WHERE   A.USE_YN = 'Y'
+                ) A
+                LEFT OUTER  JOIN TB_MENU_AUTH B
+                ON A.AUTH_ID = B.AUTH_ID
+                AND B.MENU_ID = #{menu_id}
+        ORDER BY    CAST(A.ORD AS INTEGER) ASC, A.AUTH_ID ASC
+    </select>
+
+    <insert id="save" parameterType="menuAuth">
+        /* sql : MenuAuthRepository.save */
+        WITH UPSERT AS (
+        UPDATE  TB_MENU_AUTH
+        SET     USE_YN = #{use_yn}
+              , UPDATED_AT = now()
+              , UPDATED_ID = #{updated_id}
+        WHERE   AUTH_ID = #{auth_id}
+          AND   MENU_ID = #{menu_id}
+            RETURNING *
+        )
+        INSERT INTO TB_MENU_AUTH (AUTH_ID, MENU_ID, CREATED_AT, CREATED_ID, UPDATED_AT, UPDATED_ID, USE_YN)
+        SELECT  #{auth_id}, #{menu_id}, now(), #{updated_id}, now(), #{updated_id}, #{use_yn}
+        WHERE NOT EXISTS(SELECT * FROM UPSERT)
+    </insert>
+
+    <delete id="deleteByMenuId" parameterType="String">
+        /* sql : MenuAuthRepository.deleteByMenuId */
+        DELETE  FROM TB_MENU_AUTH
+        WHERE   MENU_ID = #{menu_id}
+    </delete>
+
+</mapper>

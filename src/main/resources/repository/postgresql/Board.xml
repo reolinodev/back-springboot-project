@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.back.admin.repository.BoardRepository">
+
+    <select id="findAll" parameterType="boardEntity" resultType="boardEntity">
+        /* sql : boardRepository.findAll */
+        SELECT *
+        FROM (
+                SELECT  ROW_NUMBER() OVER (ORDER BY BOARD_ID ASC) RNUM,
+                        BOARD_ID,
+                        BOARD_TITLE,
+                        BOARD_TYPE,
+                        FN_GETCODENM('BOARD_TYPE', BOARD_TYPE) as BOARD_TYPE_NM,
+                        MEMO,
+                        USE_YN,
+                        FN_GETCODENM('USE_YN', USE_YN) as USE_YN_NM,
+                        CREATED_ID,
+                        CREATED_AT,
+                        UPDATED_ID,
+                        FN_GETUSERNM(UPDATED_ID) AS UPDATED_NM,
+                        TO_CHAR(UPDATED_AT, 'YYYY-MM-DD HH24:MI') AS UPDATED_AT
+                FROM    TB_BOARD
+        ) A
+        WHERE 1=1
+        <if test="use_yn != null and use_yn != ''">
+            AND     USE_YN = #{use_yn}
+        </if>
+        <if test="board_type != null and board_type != ''">
+            AND     BOARD_TYPE = #{board_type}
+        </if>
+        <if test="search_str != null and search_str != ''">
+            AND 	(UPPER(BOARD_TITLE) LIKE  '%'||UPPER(#{search_str})||'%'
+            OR 		UPPER(UPDATED_NM) LIKE  '%'||UPPER(#{search_str})||'%')
+        </if>
+        OFFSET  #{start_idx} limit #{page_per}
+    </select>
+
+    <select id="countAll" parameterType="boardEntity" resultType="int">
+        /* sql : boardRepository.countAll */
+        SELECT COUNT(*)
+        FROM (
+                SELECT  ROW_NUMBER() OVER (ORDER BY BOARD_ID ASC) RNUM,
+                        BOARD_ID,
+                        BOARD_TITLE,
+                        BOARD_TYPE,
+                        FN_GETCODENM('BOARD_TYPE', BOARD_TYPE) as BOARD_TYPE_NM,
+                        MEMO,
+                        USE_YN,
+                        FN_GETCODENM('USE_YN', USE_YN) AS USE_YN_NM,
+                        CREATED_ID,
+                        CREATED_AT,
+                        UPDATED_ID,
+                        FN_GETUSERNM(UPDATED_ID) AS UPDATED_NM,
+                        TO_CHAR(UPDATED_AT, 'YYYY-MM-DD HH24:MI') AS UPDATED_AT
+                FROM    TB_BOARD
+        ) A
+        WHERE 1=1
+        <if test="use_yn != null and use_yn != ''">
+        AND     USE_YN = #{use_yn}
+        </if>
+        <if test="search_str != null and search_str != ''">
+        AND 	(UPPER(BOARD_TITLE) LIKE  '%'||UPPER(#{search_str})||'%'
+        OR 		UPPER(UPDATED_NM) LIKE  '%'||UPPER(#{search_str})||'%')
+        </if>
+    </select>
+
+    <select id="findLastBoardId" resultType="String">
+        /* sql : boardRepository.findLastBoardId */
+        SELECT  'BD'||LPAD(NEXTVAL('SEQ_BOARD')||'', 8, '0')
+    </select>
+
+    <insert id="save" parameterType="boardEntity">
+        /* sql : boardRepository.save */
+        INSERT INTO TB_BOARD
+        (
+            BOARD_ID,
+            BOARD_TITLE,
+            BOARD_TYPE,
+            <if test="memo != null and memo != ''">
+            MEMO,
+            </if>
+            CREATED_ID,
+            CREATED_AT,
+            UPDATED_ID,
+            UPDATED_AT
+        )
+        VALUES
+        (
+            #{board_id},
+            #{board_title},
+            #{board_type},
+            <if test="memo != null and memo != ''">
+            #{memo},
+            </if>
+            #{created_id},
+            now(),
+            #{created_id},
+            now()
+        )
+    </insert>
+
+    <select id="findByBoardId" parameterType="String" resultType="boardEntity">
+        /* sql : boardRepository.findByBoardId */
+        SELECT  BOARD_ID,
+                BOARD_TITLE,
+                BOARD_TYPE,
+                MEMO,
+                USE_YN,
+                CREATED_ID,
+                CREATED_AT,
+                UPDATED_ID,
+                FN_GETUSERNM(UPDATED_ID) AS UPDATED_NM,
+                TO_CHAR(UPDATED_AT, 'YYYY-MM-DD HH24:MI') AS UPDATED_AT
+        FROM    TB_BOARD
+        WHERE   BOARD_ID = #{board_id}
+    </select>
+
+    <update id="update" parameterType="boardEntity">
+        /* sql : boardRepository.update */
+        UPDATE  TB_BOARD
+        SET     UPDATED_AT = now()
+                , UPDATED_ID = #{updated_id}
+                , MEMO = #{memo}
+                , BOARD_TITLE = #{board_title}
+                , USE_YN = #{use_yn}
+        WHERE   BOARD_ID = #{board_id}
+    </update>
+
+
+</mapper>

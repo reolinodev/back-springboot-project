@@ -1,6 +1,6 @@
 package com.back.config;
 
-import com.back.domain.common.Constants;
+import com.back.domain.Constants;
 import com.back.filter.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

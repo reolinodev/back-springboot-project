@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class ParameterAop {
 
-    @Pointcut("execution(* com.back.service..*(..))")
+    @Pointcut("execution(* com.back.admin.service..*(..))")
     private void cut() {
     }
 

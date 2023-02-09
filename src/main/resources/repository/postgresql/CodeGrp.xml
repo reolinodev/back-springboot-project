@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.back.admin.repository.CodeGrpRepository">
+
+    <select id="findAll" parameterType="codeGrpEntity" resultType="codeGrpEntity">
+        /* sql : codeGrpRepository.findAll */
+        SELECT  ROW_NUMBER() OVER (ORDER BY CODE_GRP_ID DESC) RNUM,
+                CODE_GRP_ID,
+                CODE_GRP_NM,
+                CODE_GRP_VAL,
+                CREATED_AT,
+                CREATED_ID,
+                UPDATED_AT,
+                UPDATED_ID,
+                USE_YN
+        FROM    TB_CODE_GRP
+        WHERE   1=1
+        <if test="use_yn != null and use_yn != ''">
+        AND     USE_YN = #{use_yn}
+        </if>
+        <if test="search_str != null and search_str != ''">
+        AND     (UPPER(CODE_GRP_NM) LIKE  '%'||UPPER(#{search_str})||'%'
+                OR UPPER(CODE_GRP_VAL) LIKE  '%'||UPPER(#{search_str})||'%')
+        </if>
+        ORDER BY CODE_GRP_ID DESC
+        OFFSET 	#{start_idx} limit #{page_per};
+    </select>
+
+    <select id="countAll" parameterType="codeGrpEntity" resultType="int">
+        /* sql : codeGrpRepository.countAll */
+        SELECT  COUNT(*)
+        FROM    TB_CODE_GRP
+        WHERE   1=1
+        <if test="use_yn != null and use_yn != ''">
+        AND     USE_YN = #{use_yn}
+        </if>
+        <if test="search_str != null and search_str != ''">
+        AND     (UPPER(CODE_GRP_NM) LIKE  '%'||UPPER(#{search_str})||'%'
+        OR      UPPER(CODE_GRP_VAL) LIKE  '%'||UPPER(#{search_str})||'%')
+        </if>
+    </select>
+
+    <select id="countByCodeGrpVal" parameterType="codeGrpEntity" resultType="int">
+        /* sql : codeGrpRepository.countByCodeGrpVal */
+        SELECT  COUNT(*)
+        FROM    TB_CODE_GRP
+        WHERE   CODE_GRP_VAL = #{code_grp_val}
+    </select>
+
+    <insert id="save" parameterType="codeGrpEntity">
+        /* sql : codeGrpRepository.save */
+        INSERT INTO TB_CODE_GRP
+        (
+            CODE_GRP_ID,
+            CODE_GRP_NM,
+            CODE_GRP_VAL,
+            CREATED_AT,
+            CREATED_ID
+        )
+        VALUES
+        (
+            'CDG'||LPAD(nextval('SEQ_CD_GRP')||'', 7, '0'),
+            #{code_grp_nm},
+            #{code_grp_val},
+            NOW(),
+            #{created_id}
+        )
+    </insert>
+
+    <select id="findByCodeGrpId" parameterType="String" resultType="codeGrpEntity">
+        /* sql : codeGrpRepository.findByCodeGrpId */
+        SELECT  CODE_GRP_ID,
+                CODE_GRP_NM,
+                CODE_GRP_VAL,
+                CREATED_AT,
+                CREATED_ID,
+                UPDATED_AT,
+                UPDATED_ID,
+                USE_YN
+        FROM    TB_CODE_GRP
+        WHERE   CODE_GRP_ID = #{code_grp_id}
+    </select>
+
+    <update id="update" parameterType="codeGrpEntity">
+        /* sql : codeGrpRepository.update */
+        UPDATE  TB_CODE_GRP
+        SET     UPDATED_AT = now(),
+                UPDATED_ID = #{updated_id},
+                CODE_GRP_NM = #{code_grp_nm},
+                USE_YN = #{use_yn}
+        WHERE   CODE_GRP_ID = #{code_grp_id}
+    </update>
+
+</mapper>

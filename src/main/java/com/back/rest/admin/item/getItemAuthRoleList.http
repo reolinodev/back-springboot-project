@@ -1,0 +1,2 @@
+GET http://localhost:8080/api/item/auth/auth-role/ADMIN
+Content-Type: application/json

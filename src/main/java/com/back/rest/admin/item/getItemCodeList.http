@@ -1,0 +1,2 @@
+GET http://localhost:8080/api/item/code/USE_YN
+Content-Type: application/json

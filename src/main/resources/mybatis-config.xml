@@ -3,7 +3,20 @@
   "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
   <typeAliases>
-    <typeAlias type="com.back.domain.User" alias="user"/>
-    <typeAlias type="com.back.domain.LoginEntity" alias="loginEntity"/>
+    <typeAlias type="com.back.admin.domain.UserEntity" alias="userEntity"/>
+    <typeAlias type="com.back.admin.domain.LoginEntity" alias="loginEntity"/>
+    <typeAlias type="com.back.admin.domain.AuthEntity" alias="authEntity"/>
+    <typeAlias type="com.back.admin.domain.UserAuthEntity" alias="userAuthEntity"/>
+    <typeAlias type="com.back.admin.domain.CodeGrpEntity" alias="codeGrpEntity"/>
+    <typeAlias type="com.back.admin.domain.Code" alias="code"/>
+    <typeAlias type="com.back.admin.domain.CodeEntity" alias="codeEntity"/>
+    <typeAlias type="com.back.admin.domain.MenuEntity" alias="menuEntity"/>
+    <typeAlias type="com.back.admin.domain.MenuAuth" alias="menuAuth"/>
+    <typeAlias type="com.back.admin.domain.MenuAuthEntity" alias="menuAuthEntity"/>
+    <typeAlias type="com.back.admin.domain.BoardEntity" alias="boardEntity"/>
+    <typeAlias type="com.back.admin.domain.BoardAuth" alias="boardAuth"/>
+    <typeAlias type="com.back.admin.domain.PostEntity" alias="postEntity"/>
+    <typeAlias type="com.back.admin.domain.FaqEntity" alias="faqEntity"/>
+    <typeAlias type="com.back.admin.domain.QnaEntity" alias="qnaEntity"/>
   </typeAliases>
 </configuration>
