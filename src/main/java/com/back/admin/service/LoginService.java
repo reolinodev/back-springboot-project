@@ -21,8 +21,8 @@ public class LoginService {
         return loginRepository.countByLoginIdAndUserPw(loginEntity);
     }
 
-    public LoginEntity getLoginId(LoginEntity loginEntity) {
-        return loginRepository.findByLoginId(loginEntity);
+    public LoginEntity getLoginId(String loginId) {
+        return loginRepository.findByLoginId(loginId);
     }
 
     public int updateLastLoginDt(LoginEntity loginEntity) {

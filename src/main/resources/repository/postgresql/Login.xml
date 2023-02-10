@@ -20,7 +20,7 @@
         AND 	USE_YN = 'Y'
     </select>
 
-    <select id="findByLoginId" parameterType="loginEntity" resultType="loginEntity">
+    <select id="findByLoginId" parameterType="string" resultType="loginEntity">
         /* sql : LoginRepository.findByLoginId */
         SELECT  A.USER_ID,
                 A.LOGIN_ID,

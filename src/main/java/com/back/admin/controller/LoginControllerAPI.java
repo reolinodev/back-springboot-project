@@ -79,7 +79,7 @@ public class LoginControllerAPI {
             return new ResponseEntity<>(responseMap, status);
         }
 
-        LoginEntity loginData = loginService.getLoginId(loginEntity);
+        LoginEntity loginData = loginService.getLoginId(loginEntity.login_id);
 
         if(loginData.pw_fail_cnt > 5){
             message = "비밀번호 입력을 5회이상 실패하셨습니다. 관리자에게 문의 바랍니다.";
@@ -123,7 +123,7 @@ public class LoginControllerAPI {
         String code = "ok";
         HttpStatus status = HttpStatus.OK;
 
-        LoginEntity loginInfo = loginService.getLoginId(loginEntity);
+        LoginEntity loginInfo = loginService.getLoginId(loginEntity.login_id);
 
         int pwFailCnt = loginInfo.pw_fail_cnt;
         String pwInitYn = loginInfo.pw_init_yn;

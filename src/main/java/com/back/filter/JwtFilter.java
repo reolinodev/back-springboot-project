@@ -90,7 +90,7 @@ public class JwtFilter extends OncePerRequestFilter {
                         if (jwtUtils.validateToken(refreshToken)) {
                             response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
-                            LoginEntity loginData = loginService.getLoginId(loginEntity);
+                            LoginEntity loginData = loginService.getLoginId(loginEntity.login_id);
                             String accessToken = jwtUtils.generateToken(loginData);
                             loginData.access_token = accessToken;
                             loginService.saveToken(loginData);

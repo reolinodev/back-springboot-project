@@ -10,7 +10,7 @@ public interface LoginRepository {
 
     int countByLoginIdAndUserPw(LoginEntity loginEntity);
 
-    LoginEntity findByLoginId(LoginEntity loginEntity);
+    LoginEntity findByLoginId(String loginId);
 
     int saveLastLoginDt(LoginEntity loginEntity);
 

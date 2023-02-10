@@ -46,6 +46,9 @@
         <if test='tel_no != "" and tel_no != null'>
             , TEL_NO = #{tel_no}
         </if>
+        <if test='pw_init_yn != "" and pw_init_yn != null'>
+            , PW_INIT_YN = #{pw_init_yn}
+        </if>
         WHERE USER_ID = #{user_id}
     </update>
 

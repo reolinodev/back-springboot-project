@@ -50,7 +50,7 @@ class LoginServiceTest {
         loginEntity.login_id = "reolino@gmail.com";
 
         //when
-        var result = loginService.getLoginId(loginEntity);
+        var result = loginService.getLoginId(loginEntity.login_id);
         System.out.println("result = " + result);
 
         //then
@@ -82,7 +82,7 @@ class LoginServiceTest {
         //when
         loginService.updatePwfailCnt(loginEntity);
 
-        var result = loginService.getLoginId(loginEntity);
+        var result = loginService.getLoginId(loginEntity.login_id);
         System.out.println("result = " + result);
 
         //then
