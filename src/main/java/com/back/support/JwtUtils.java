@@ -93,6 +93,7 @@ public class JwtUtils {
     }
 
     public String resolveToken(HttpServletRequest request) {
+        System.out.println("1111<<<<"+request.getHeader("Authorization"));
         return request.getHeader("Authorization");
     }
 

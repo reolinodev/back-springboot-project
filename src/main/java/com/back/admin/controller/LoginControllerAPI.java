@@ -2,6 +2,7 @@ package com.back.admin.controller;
 
 import com.back.admin.domain.LoginEntity;
 import com.back.admin.service.LoginService;
+import com.back.domain.Header;
 import com.back.domain.JwtHeader;
 import com.back.support.JwtUtils;
 import com.back.support.ResponseUtils;
@@ -38,12 +39,10 @@ public class LoginControllerAPI {
 
     @ApiOperation(value = "사용자를 체크하고 인증키를 발급한다.")
     @PostMapping("/certification")
-    public ResponseEntity<Map<String,Object>> login (
+    public ResponseEntity<Map<String,Object>> certification (
         @ApiParam(
             value = "login_id : 로그인 아이디, 필수 \n"
                 +"user_pw : 비밀번호, 필수  \n"
-                +"login_device : 사용자 디바이스   \n"
-                +"device_browser : 사용자 브라우저  \n"
         )
         @RequestBody LoginEntity loginEntity, HttpServletRequest httpServletRequest) throws Exception {
 
@@ -100,14 +99,66 @@ public class LoginControllerAPI {
         loginData.refresh_token = refreshToken;
         loginService.saveToken(loginData);
 
-        loginEntity.user_id = loginData.user_id;
-        loginService.updateLastLoginDt(loginEntity);
-        loginService.saveLoginHistory(loginEntity);
-
         jwtHeader = ResponseUtils.setJwtHeader(message, code, accessToken, refreshToken, httpServletRequest);
 
         responseMap.put("header", jwtHeader);
         return new ResponseEntity<>(responseMap, status);
-
     }
+
+    @ApiOperation(value = "사용자를 정보를 체크하고 이력을 관리한다.")
+    @PostMapping("/login")
+    public ResponseEntity<Map<String,Object>> login (
+        @ApiParam(
+            value = "login_id : 로그인 아이디, 필수 \n"
+                +"user_pw : 비밀번호, 필수  \n"
+                +"login_device : 사용자 디바이스   \n"
+                +"device_browser : 사용자 브라우저  \n"
+        )
+        @RequestBody LoginEntity loginEntity, HttpServletRequest httpServletRequest) throws Exception {
+
+        Map <String,Object> responseMap = new HashMap<>();
+        Header header = new Header();
+
+        String message = "";
+        String code = "ok";
+        HttpStatus status = HttpStatus.OK;
+
+        LoginEntity loginInfo = loginService.getLoginId(loginEntity);
+
+        int pwFailCnt = loginInfo.pw_fail_cnt;
+        String pwInitYn = loginInfo.pw_init_yn;
+
+        //5회이상 실패했을 경우
+        if(pwFailCnt > 5){
+            message = "비밀번호를 5회이상 실패하였습니다. 관리자에게 문의하세요.";
+            code = "fail";
+            status = HttpStatus.BAD_REQUEST;
+        }
+        //초기화를 안했을때
+        else if("N".equals(pwInitYn)) {
+            message = "비밀번호 초기화가 필요합니다. 비밀번호 변경 화면으로 이동합니다.";
+            code = "pwchange";
+        }
+        else{
+            loginEntity.user_id = loginInfo.user_id;
+            loginService.saveLoginHistory(loginEntity);
+            int result = loginService.updateLastLoginDt(loginInfo);
+
+            if(result < 1){
+                message = "로그인에 실패하였습니다..";
+                code = "fail";
+                status = HttpStatus.BAD_REQUEST;
+            }else{
+                message = "메인화면으로 이동합니다.";
+            }
+        }
+
+        header = ResponseUtils.setHeader(message, code, httpServletRequest);
+
+        responseMap.put("header", header);
+        responseMap.put("data", loginInfo);
+
+        return new ResponseEntity<>(responseMap, status);
+    }
+
 }

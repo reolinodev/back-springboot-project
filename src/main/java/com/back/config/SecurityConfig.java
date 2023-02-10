@@ -5,6 +5,7 @@ import com.back.filter.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -38,8 +39,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .headers().frameOptions().sameOrigin()
             .and()
             .authorizeRequests()
-            .antMatchers(Constants.permitAllArray)
-            .permitAll().anyRequest().authenticated()
+            .antMatchers(Constants.permitAllArray).permitAll()
+            .antMatchers(HttpMethod.OPTIONS, "/**/*").permitAll()
+            .anyRequest().authenticated()
             .and()
             .exceptionHandling()
             .and()

@@ -52,6 +52,9 @@ public class User extends Param {
     @ApiModelProperty(example = "패스실패횟수")
     public int pw_fail_cnt;
 
+    @ApiModelProperty(example = "패스초기화여부")
+    public String pw_init_yn;
+
     @ApiModelProperty(example = "최근 로그인시간")
     public String last_login_dt;
 
