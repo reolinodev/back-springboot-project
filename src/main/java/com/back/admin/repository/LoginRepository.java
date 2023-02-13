@@ -12,7 +12,7 @@ public interface LoginRepository {
 
     LoginEntity findByLoginId(String loginId);
 
-    int saveLastLoginDt(LoginEntity loginEntity);
+    int saveLastLoginAt(LoginEntity loginEntity);
 
     int savePwfailCnt(LoginEntity loginEntity);
 

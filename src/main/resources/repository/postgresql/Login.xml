@@ -30,7 +30,7 @@
                 A.PW_FAIL_CNT,
                 A.PW_INIT_YN,
                 A.USER_PW,
-                A.LAST_LOGIN_DT
+                A.LAST_LOGIN_AT
         FROM 	TB_USER A,
                 TB_USER_AUTH B,
                 TB_AUTH C
@@ -42,10 +42,10 @@
             LIMIT 1
     </select>
 
-    <update id="saveLastLoginDt" parameterType="loginEntity">
-        /* sql : LoginRepository.saveLastLoginDt */
+    <update id="saveLastLoginAt" parameterType="loginEntity">
+        /* sql : LoginRepository.saveLastLoginAt */
         UPDATE 	TB_USER
-        SET 	LAST_LOGIN_DT = now(),
+        SET 	LAST_LOGIN_AT = now(),
                 PW_FAIL_CNT = 0
         WHERE 	LOGIN_ID = #{login_id}
     </update>

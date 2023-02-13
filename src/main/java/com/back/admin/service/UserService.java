@@ -36,7 +36,10 @@ public class UserService {
     }
 
     public int updateUser(UserEntity userEntity) throws Exception {
-        userEntity.user_pw = CryptUtils.encryptSha256(userEntity.user_pw);
+        if(userEntity.user_pw != null){
+            userEntity.user_pw = CryptUtils.encryptSha256(userEntity.user_pw);
+        }
+
         return userRepository.update(userEntity);
     }
 

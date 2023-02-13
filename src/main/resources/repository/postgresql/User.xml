@@ -34,6 +34,7 @@
 
 
     <update id="update" parameterType="userEntity">
+        /* sql : UserRepository.update */
         UPDATE TB_USER
         SET  UPDATED_AT = now()
         ,UPDATED_ID = #{updated_id}
@@ -49,6 +50,12 @@
         <if test='pw_init_yn != "" and pw_init_yn != null'>
             , PW_INIT_YN = #{pw_init_yn}
         </if>
+        <if test='pw_fail_init != "" and pw_fail_init != null'>
+            , PW_FAIL_CNT = #{pw_fail_cnt}
+        </if>
+        <if test='use_yn != "" and use_yn != null'>
+            , USE_YN = #{use_yn}
+        </if>
         WHERE USER_ID = #{user_id}
     </update>
 
@@ -62,15 +69,18 @@
                 TEL_NO,
                 USE_YN,
                 FN_GETCODENM('USE_YN', USE_YN) AS USE_YN_NM,
+                TO_CHAR(LAST_LOGIN_AT, 'YYYY-MM-DD HH24:MI') AS LAST_LOGIN_AT,
                 CREATED_AT,
                 UPDATED_AT,
                 CREATED_ID,
                 UPDATED_ID
         FROM    TB_USER
         WHERE 1=1
-        <if test="search_str != null and search_str != ''">
-        AND 	(UPPER(LOGIN_ID) LIKE '%'||UPPER(#{search_str})||'%'
-        OR 		UPPER(USER_NM) LIKE '%'||UPPER(#{search_str})||'%')
+        <if test="login_id != null and login_id != ''">
+        AND 	UPPER(LOGIN_ID) LIKE '%'||UPPER(#{login_id})||'%'
+        </if>
+        <if test="user_nm != null and user_nm != ''">
+        AND 	UPPER(USER_NM) LIKE '%'||UPPER(#{user_nm})||'%'
         </if>
         <if test="use_yn != null and use_yn != ''">
         AND 	USE_YN = #{use_yn}
@@ -84,12 +94,14 @@
         SELECT  COUNT(*)
         FROM    TB_USER
         WHERE 1=1
-        <if test="search_str != null and search_str != ''">
-            AND 	(UPPER(LOGIN_ID) LIKE '%'||UPPER(#{search_str})||'%'
-            OR 		UPPER(USER_NM) LIKE '%'||UPPER(#{search_str})||'%')
+        <if test="login_id != null and login_id != ''">
+        AND 	UPPER(LOGIN_ID) LIKE '%'||UPPER(#{login_id})||'%'
+        </if>
+        <if test="user_nm != null and user_nm != ''">
+        AND 	UPPER(USER_NM) LIKE '%'||UPPER(#{user_nm})||'%'
         </if>
         <if test="use_yn != null and use_yn != ''">
-            AND 	USE_YN = #{use_yn}
+        AND 	USE_YN = #{use_yn}
         </if>
     </select>
 
@@ -105,7 +117,10 @@
                 CREATED_AT,
                 UPDATED_AT,
                 CREATED_ID,
-                UPDATED_ID
+                UPDATED_ID,
+                PW_FAIL_CNT,
+                TO_CHAR(LAST_LOGIN_AT, 'YYYY-MM-DD HH24:MI') AS LAST_LOGIN_AT,
+                PW_INIT_YN
         FROM    TB_USER
         WHERE   USER_ID = #{user_id}
     </select>

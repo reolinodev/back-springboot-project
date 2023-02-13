@@ -17,4 +17,7 @@ public class UserEntity extends User {
 
     @ApiModelProperty(example = "사용여부")
     public String use_yn_nm;
+
+    @ApiModelProperty(example = "비밀번호실패초기화")
+    public String pw_fail_init;
 }

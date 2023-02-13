@@ -1,12 +1,11 @@
 package com.back.admin.controller;
 
-import com.back.admin.domain.LoginEntity;
 import com.back.admin.domain.User;
 import com.back.admin.domain.UserEntity;
-import com.back.admin.service.LoginService;
-import com.back.domain.Header;
 import com.back.admin.domain.common.ValidationGroups;
+import com.back.admin.service.LoginService;
 import com.back.admin.service.UserService;
+import com.back.domain.Header;
 import com.back.support.JwtUtils;
 import com.back.support.ResponseUtils;
 import io.swagger.annotations.Api;
@@ -14,7 +13,6 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +37,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserControllerAPI {
 
     private final UserService userService;
-    private final LoginService loginService;
     private final JwtUtils jwtUtils;
 
     @ApiOperation(value = "사용자를 전체 조회한다.")
@@ -189,12 +186,41 @@ public class UserControllerAPI {
         @RequestBody UserEntity userEntity, HttpServletRequest httpServletRequest) throws Exception {
         LinkedHashMap <String,Object> responseMap = new LinkedHashMap<>();
 
-        LoginEntity loginData = loginService.getLoginId(userEntity.login_id);
         userEntity.updated_id = jwtUtils.getTokenInfo(jwtUtils.resolveToken(httpServletRequest),"user_id");
-        userEntity.pw_init_yn = "Y";
-        userEntity.user_id = loginData.user_id;
+        if("N".equals(userEntity.pw_init_yn)){
+            userEntity.user_pw = userEntity.login_id;
+        }
+
         int result = userService.updateUser(userEntity);
-        String message = "사용자의 비밀번호가 수정이 되었습니다.";
+        String message = "사용자의 비밀번호가 초기화 되었습니다.";
+        String code = "ok";
+        if(result < 1){
+            message ="정상적으로 수정이 되지 않았습니다.";
+            code = "fail";
+        }
+
+        Header header = ResponseUtils.setHeader(message, code, httpServletRequest);
+        responseMap.put("header", header);
+
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "사용자의 잠금상태를 수정한다.")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "user_id", value = "사용자식별키", required = true, dataType = "String", paramType = "path", example = "USOOOOOOO1"),
+    })
+    @PutMapping("/pw-fail-cnt/{user_id}")
+    public ResponseEntity<Map<String,Object>> updatePwFailCnt(
+        @RequestBody UserEntity userEntity,
+        @PathVariable String user_id, HttpServletRequest httpServletRequest) throws Exception {
+        LinkedHashMap <String,Object> responseMap = new LinkedHashMap<>();
+
+        userEntity.user_id = user_id;
+        userEntity.updated_id = jwtUtils.getTokenInfo(jwtUtils.resolveToken(httpServletRequest),"user_id");
+        userEntity.pw_fail_init = "Y";
+        userEntity.pw_fail_cnt = 0;
+        int result = userService.updateUser(userEntity);
+        String message = "사용자의 잠금이 해제되었습니다.";
         String code = "ok";
         if(result < 1){
             message ="정상적으로 수정이 되지 않았습니다.";
