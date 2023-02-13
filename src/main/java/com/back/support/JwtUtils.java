@@ -55,6 +55,7 @@ public class JwtUtils {
             .setExpiration(new Date(System.currentTimeMillis() + tokenValidTime))
             .claim("user_id", loginEntity.user_id)
             .claim("login_id", loginEntity.login_id)
+            .claim("auth_id", loginEntity.auth_id)
             .claim("user_nm", loginEntity.user_nm)
             .claim("user_pw", loginEntity.user_pw)
             .signWith(SignatureAlgorithm.HS256, secretKey).compact();
@@ -68,6 +69,7 @@ public class JwtUtils {
             .setExpiration(new Date(System.currentTimeMillis() + tokenValidTime * 6))
             .claim("user_id", loginEntity.user_id)
             .claim("login_id", loginEntity.login_id)
+            .claim("auth_id", loginEntity.auth_id)
             .claim("user_nm", loginEntity.user_nm)
             .claim("user_pw", loginEntity.user_pw)
             .signWith(SignatureAlgorithm.HS256, secretKey).compact();

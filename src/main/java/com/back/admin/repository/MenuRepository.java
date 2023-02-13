@@ -21,16 +21,10 @@ public interface MenuRepository {
 
     int deleteByMenuId(String menuId);
 
-
     List<MenuEntity> findByMenuLvAndPrnMenuId(MenuEntity menuEntity);
 
-    /********************************/
-
-
-    MenuEntity findByMainUrl(MenuEntity menuEntity);
+    MenuEntity findUrlByAuthId(MenuEntity menuEntity);
 
     List<MenuEntity> findByMenuLvAndAuthId(MenuEntity menuEntity);
-
-
 
 }

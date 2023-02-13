@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -87,7 +88,7 @@ public class ItemControllerAPI {
     }
 
     @ApiOperation(value = "내가 가진 권한을 가져온다.")
-    @GetMapping("/auth/mine/{user_id}")
+    @PostMapping("/auth/mine/{user_id}")
     public ResponseEntity <Map<String,Object>> getItemMyAuthList(@PathVariable String user_id, HttpServletRequest httpServletRequest) {
 
         LinkedHashMap <String,Object> responseMap = new LinkedHashMap<>();
@@ -122,7 +123,7 @@ public class ItemControllerAPI {
     }
 
 
-    @ApiOperation(value = "내가 가진 권한을 가져온다.")
+    @ApiOperation(value = "게시판에서 내가 가진 권한을 가져온다.")
     @GetMapping("/board/use-yn/{use_yn}")
     public ResponseEntity <Map<String,Object>> getItemUseYnBoardList(@PathVariable String use_yn, HttpServletRequest httpServletRequest) {
 

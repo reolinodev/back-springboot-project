@@ -54,13 +54,13 @@ public class MenuService {
         return  menuRepository.deleteByMenuId(menuId);
     }
 
+    public MenuEntity getUrlData(MenuEntity menuEntity) {
+        return menuRepository.findUrlByAuthId(menuEntity);
+    }
 
-//
-//    public List<MenuEntity> getMenuListLv(MenuEntity menuEntity) {
-//        return menuRepository.findByMenuLvAndAuthId(menuEntity);
-//    }
-//
-//    public MenuEntity getMainUrl(MenuEntity menuEntity) {
-//        return menuRepository.findByMainUrl(menuEntity);
-//    }
+    public List<MenuEntity> getMenuList(MenuEntity menuEntity) {
+        return menuRepository.findByMenuLvAndAuthId(menuEntity);
+    }
+
+
 }

@@ -25,14 +25,21 @@
         SELECT  A.USER_ID,
                 A.LOGIN_ID,
                 A.USER_NM,
-                A.USER_PW,
-                A.TEL_NO,
-                A.USE_YN,
+                C.AUTH_NM,
+                C.AUTH_ID,
                 A.PW_FAIL_CNT,
                 A.PW_INIT_YN,
+                A.USER_PW,
                 A.LAST_LOGIN_DT
-        FROM 	TB_USER A
-        WHERE   A.LOGIN_ID = #{login_id}
+        FROM 	TB_USER A,
+                TB_USER_AUTH B,
+                TB_AUTH C
+        WHERE 	A.USER_ID = B.USER_ID
+          AND 	B.AUTH_ID = C.AUTH_ID
+          AND 	B.USE_YN ='Y'
+          AND 	A.LOGIN_ID = #{login_id}
+        ORDER BY ORD
+            LIMIT 1
     </select>
 
     <update id="saveLastLoginDt" parameterType="loginEntity">
@@ -71,7 +78,7 @@
     </insert>
 
     <select id="findTokenByAccessToken" parameterType="loginEntity" resultType="loginEntity">
-        /* sql : LoginRepository.findByLoginId */
+        /* sql : LoginRepository.findTokenByAccessToken */
         SELECT  LOGIN_ID,
                 ACCESS_TOKEN,
                 REFRESH_TOKEN,

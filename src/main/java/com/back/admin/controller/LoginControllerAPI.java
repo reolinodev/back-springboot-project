@@ -89,6 +89,14 @@ public class LoginControllerAPI {
             jwtHeader = ResponseUtils.setJwtHeader(message, code, accessToken, refreshToken, httpServletRequest);
             responseMap.put("header", jwtHeader);
             return new ResponseEntity<>(responseMap, status);
+        }else if("".equals(loginData.auth_id)){
+            message = "사용자의 권한이 존재하지 않습니다. 관리자에게 문의 바랍니다.";
+            code = "fail";
+            status = HttpStatus.BAD_REQUEST;
+
+            jwtHeader = ResponseUtils.setJwtHeader(message, code, accessToken, refreshToken, httpServletRequest);
+            responseMap.put("header", jwtHeader);
+            return new ResponseEntity<>(responseMap, status);
         }
 
         message = "인증키가 생성되었습니다.";
@@ -128,14 +136,9 @@ public class LoginControllerAPI {
         int pwFailCnt = loginInfo.pw_fail_cnt;
         String pwInitYn = loginInfo.pw_init_yn;
 
-        //5회이상 실패했을 경우
-        if(pwFailCnt > 5){
-            message = "비밀번호를 5회이상 실패하였습니다. 관리자에게 문의하세요.";
-            code = "fail";
-            status = HttpStatus.BAD_REQUEST;
-        }
+
         //초기화를 안했을때
-        else if("N".equals(pwInitYn)) {
+        if("N".equals(pwInitYn)) {
             message = "비밀번호 초기화가 필요합니다. 비밀번호 변경 화면으로 이동합니다.";
             code = "pwchange";
         }

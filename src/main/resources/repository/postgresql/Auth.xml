@@ -21,6 +21,7 @@
                 FN_GETCODENM('USE_YN', USE_YN) AS USE_YN_NM,
                 ORD,
                 MEMO,
+                MAIN_URL,
                 CREATED_ID,
                 CREATED_AT,
                 UPDATED_ID,
@@ -65,6 +66,9 @@
         <if test="memo != null and memo != ''">
             MEMO,
         </if>
+        <if test="main_url != null and main_url != ''">
+            MAIN_URL,
+        </if>
             CREATED_ID,
             CREATED_AT
         )
@@ -79,6 +83,9 @@
         </if>
         <if test="memo != null and memo != ''">
             #{memo},
+        </if>
+        <if test="main_url != null and main_url != ''">
+            #{main_url},
         </if>
             #{created_id},
             now()
@@ -102,6 +109,9 @@
             <if test="use_yn != null and use_yn != ''">
                 , USE_YN = #{use_yn}
             </if>
+            <if test="main_url != null and main_url != ''">
+                , MAIN_URL = #{main_url}
+            </if>
         WHERE   AUTH_ID = #{auth_id}
     </update>
 
@@ -114,6 +124,7 @@
                 USE_YN,
                 ORD,
                 MEMO,
+                MAIN_URL,
                 CREATED_ID,
                 CREATED_AT,
                 UPDATED_ID,

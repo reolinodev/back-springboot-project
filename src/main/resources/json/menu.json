@@ -1,0 +1,22 @@
+{
+  "menuMainUrl" :
+  { "menu_id": "MN00000002", "menu_nm": "사용자정보", "menu_lv": 2, "prn_menu_id": "MN00000001", "url" : "/page/user/user", "prn_menu_nm": "사용자관리" },
+  "menuLv1List" : [
+    { "menu_id": "MN00000001", "menu_nm": "사용자관리", "menu_lv": 1, "prn_menu_id": "", "url" : "", "prn_menu_nm": "" },
+    { "menu_id": "MN00000005", "menu_nm": "메뉴관리", "menu_lv": 1, "prn_menu_id": "", "url" : "", "prn_menu_nm": "" },
+    { "menu_id": "MN00000008", "menu_nm": "게시판관리", "menu_lv": 1, "prn_menu_id": "", "url" : "", "prn_menu_nm": "" },
+    { "menu_id": "MN00000013", "menu_nm": "기타관리", "menu_lv": 1, "prn_menu_id": "", "url" : "", "prn_menu_nm": "" }
+  ],
+  "menuLv2List" : [
+    { "menu_id": "MN00000002", "menu_nm": "사용자정보", "menu_lv": 2, "prn_menu_id": "MN00000001", "url" : "/page/user/user", "prn_menu_nm": "사용자관리" },
+    { "menu_id": "MN00000003", "menu_nm": "권한정보", "menu_lv": 2, "prn_menu_id": "MN00000001", "url" : "/page/user/auth", "prn_menu_nm": "사용자관리" },
+    { "menu_id": "MN00000004", "menu_nm": "사용자권한정보", "menu_lv": 2, "prn_menu_id": "MN00000001", "url" : "/page/user/userAuth", "prn_menu_nm": "사용자관리" },
+    { "menu_id": "MN00000006", "menu_nm": "메뉴정보", "menu_lv": 2, "prn_menu_id": "MN00000005", "url" : "/page/menu/menu", "prn_menu_nm": "메뉴관리" },
+    { "menu_id": "MN00000007", "menu_nm": "메뉴별권한정보", "menu_lv": 2, "prn_menu_id": "MN00000005", "url" : "/page/menu/menuAuth", "prn_menu_nm": "메뉴관리" },
+    { "menu_id": "MN00000009", "menu_nm": "게시판정보", "menu_lv": 2, "prn_menu_id": "MN00000008", "url" : "/page/board/board", "prn_menu_nm": "게시판관리" },
+    { "menu_id": "MN00000010", "menu_nm": "게시글정보", "menu_lv": 2, "prn_menu_id": "MN00000008", "url" : "/page/board/post", "prn_menu_nm": "게시판관리" },
+    { "menu_id": "MN00000011", "menu_nm": "FAQ정보", "menu_lv": 2, "prn_menu_id": "MN00000008", "url" : "/page/board/post", "prn_menu_nm": "게시판관리" },
+    { "menu_id": "MN00000012", "menu_nm": "QNA정보", "menu_lv": 2, "prn_menu_id": "MN00000008", "url" : "/page/board/post", "prn_menu_nm": "게시판관리" },
+    { "menu_id": "MN00000014", "menu_nm": "코드정보", "menu_lv": 2, "prn_menu_id": "MN00000013", "url" : "/page/mng/code", "prn_menu_nm": "기타관리" }
+  ]
+}
