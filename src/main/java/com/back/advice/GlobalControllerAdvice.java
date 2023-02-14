@@ -2,6 +2,9 @@ package com.back.advice;
 
 import com.back.domain.Error;
 import com.back.domain.ErrorResponse;
+import java.util.LinkedHashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -17,10 +20,20 @@ import java.util.List;
 @RestControllerAdvice
 public class GlobalControllerAdvice {
 
+    private final Logger LOGGER = LoggerFactory.getLogger(GlobalControllerAdvice.class.getName());
+
     @ExceptionHandler(value = Exception.class)
-    public ResponseEntity<?> exception(Exception e) {
-        System.out.println(e.getClass().getName());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("");
+    public ResponseEntity<?> exception(Exception e, HttpServletRequest httpServletRequest) {
+
+        LOGGER.debug(e.getClass().getName());
+        LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.message = e.getCause().getMessage();
+        errorResponse.request_url = httpServletRequest.getRequestURI();
+        errorResponse.result_code = "error";
+        map.put("header", errorResponse);
+        return new ResponseEntity<> (map, HttpStatus.INTERNAL_SERVER_ERROR);
+
     }
 
     /* @Valid의 유효조건 맞지 않을 경우 반환한다.*/
