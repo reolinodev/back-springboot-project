@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @Data
 public class ErrorResponse {
 
-    String requestUrl;
+    public List<Error> error_list;
 
-    String message;
+    public String message;
 
-    String resultCode;
+    public String request_url;
 
-    List<Error> errorList;
+    public String result_code;
 }

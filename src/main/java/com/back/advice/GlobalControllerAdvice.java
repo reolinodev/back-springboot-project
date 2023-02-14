@@ -2,23 +2,17 @@ package com.back.advice;
 
 import com.back.domain.common.Error;
 import com.back.domain.common.ErrorResponse;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 @RestControllerAdvice
 public class GlobalControllerAdvice {
@@ -51,12 +45,14 @@ public class GlobalControllerAdvice {
             errorList.add(errorMessage);
         });
 
+        LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
         ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setErrorList(errorList);
-        errorResponse.setMessage("전송 데이터를 확인해주세요.");
-        errorResponse.setRequestUrl(httpServletRequest.getRequestURI());
-        errorResponse.setResultCode("FAIL");
+        errorResponse.error_list = errorList;
+        errorResponse.message = "Request Body를 확인해주세요.";
+        errorResponse.request_url = httpServletRequest.getRequestURI();
+        errorResponse.result_code = "vaild";
+        map.put("header", errorResponse);
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        return new ResponseEntity<> (map, HttpStatus.BAD_REQUEST);
     }
 }
