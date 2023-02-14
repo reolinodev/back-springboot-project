@@ -3,6 +3,7 @@ package com.back.admin.domain.common;
 public class ValidationGroups {
     public interface UserCreateGroup {};
     public interface UserUpdateGroup {};
+    public interface UserPwUpdateGroup {};
     public interface AuthCreateGroup {};
     public interface AuthUpdateGroup {};
     public interface CodeGrpCreateGroup {};

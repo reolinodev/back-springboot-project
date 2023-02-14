@@ -49,6 +49,7 @@
         </if>
         <if test='pw_init_yn != "" and pw_init_yn != null'>
             , PW_INIT_YN = #{pw_init_yn}
+            , PW_FAIL_CNT = #{pw_fail_cnt}
         </if>
         <if test='pw_fail_init != "" and pw_fail_init != null'>
             , PW_FAIL_CNT = #{pw_fail_cnt}

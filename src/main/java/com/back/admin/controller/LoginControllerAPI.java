@@ -17,6 +17,7 @@ import io.swagger.annotations.Example;
 import io.swagger.annotations.ExampleProperty;
 import io.swagger.models.Response;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +48,7 @@ public class LoginControllerAPI {
         @RequestBody LoginEntity loginEntity, HttpServletRequest httpServletRequest) throws Exception {
 
         JwtHeader jwtHeader;
-        Map <String,Object> responseMap = new HashMap<>();
+        LinkedHashMap<String,Object> responseMap = new LinkedHashMap<>();
 
         HttpStatus status = HttpStatus.OK;
         String message = "";
@@ -59,7 +60,7 @@ public class LoginControllerAPI {
         if(countLoginId == 0){
             message = "아이디가 존재하지 않습니다.";
             code = "fail";
-            status = HttpStatus.BAD_REQUEST;
+            status = HttpStatus.UNAUTHORIZED;
             jwtHeader = ResponseUtils.setJwtHeader(message, code, accessToken, refreshToken, httpServletRequest);
             responseMap.put("header", jwtHeader);
             return new ResponseEntity<>(responseMap, status);
@@ -70,7 +71,7 @@ public class LoginControllerAPI {
         if(countUserPw == 0){
             message = "비밀번호가 일치하지 않습니다.";
             code = "fail";
-            status = HttpStatus.BAD_REQUEST;
+            status = HttpStatus.UNAUTHORIZED;
 
             loginService.updatePwfailCnt(loginEntity);
 
@@ -84,7 +85,7 @@ public class LoginControllerAPI {
         if(loginData.pw_fail_cnt > 5){
             message = "비밀번호 입력을 5회이상 실패하셨습니다. 관리자에게 문의 바랍니다.";
             code = "fail";
-            status = HttpStatus.BAD_REQUEST;
+            status = HttpStatus.UNAUTHORIZED;
 
             jwtHeader = ResponseUtils.setJwtHeader(message, code, accessToken, refreshToken, httpServletRequest);
             responseMap.put("header", jwtHeader);
@@ -92,7 +93,7 @@ public class LoginControllerAPI {
         }else if("".equals(loginData.auth_id)){
             message = "사용자의 권한이 존재하지 않습니다. 관리자에게 문의 바랍니다.";
             code = "fail";
-            status = HttpStatus.BAD_REQUEST;
+            status = HttpStatus.UNAUTHORIZED;
 
             jwtHeader = ResponseUtils.setJwtHeader(message, code, accessToken, refreshToken, httpServletRequest);
             responseMap.put("header", jwtHeader);
@@ -122,20 +123,16 @@ public class LoginControllerAPI {
                 +"login_device : 사용자 디바이스   \n"
                 +"device_browser : 사용자 브라우저  \n"
         )
-        @RequestBody LoginEntity loginEntity, HttpServletRequest httpServletRequest) throws Exception {
+        @RequestBody LoginEntity loginEntity, HttpServletRequest httpServletRequest) {
 
-        Map <String,Object> responseMap = new HashMap<>();
-        Header header = new Header();
+        LinkedHashMap <String,Object> responseMap = new LinkedHashMap<>();
 
         String message = "";
         String code = "ok";
         HttpStatus status = HttpStatus.OK;
 
         LoginEntity loginInfo = loginService.getLoginId(loginEntity.login_id);
-
-        int pwFailCnt = loginInfo.pw_fail_cnt;
         String pwInitYn = loginInfo.pw_init_yn;
-
 
         //초기화를 안했을때
         if("N".equals(pwInitYn)) {
@@ -150,15 +147,13 @@ public class LoginControllerAPI {
             if(result < 1){
                 message = "로그인에 실패하였습니다..";
                 code = "fail";
-                status = HttpStatus.BAD_REQUEST;
+                status = HttpStatus.UNAUTHORIZED;
             }else{
                 message = "메인화면으로 이동합니다.";
             }
         }
 
-        header = ResponseUtils.setHeader(message, code, httpServletRequest);
-
-        responseMap.put("header", header);
+        responseMap.put("header", ResponseUtils.setHeader(message, code, httpServletRequest));
         responseMap.put("data", loginInfo);
 
         return new ResponseEntity<>(responseMap, status);

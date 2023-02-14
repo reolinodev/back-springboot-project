@@ -2,6 +2,7 @@ package com.back.admin.domain;
 
 import com.back.admin.domain.common.Param;
 import com.back.admin.domain.common.ValidationGroups.UserCreateGroup;
+import com.back.admin.domain.common.ValidationGroups.UserPwUpdateGroup;
 import com.back.admin.domain.common.ValidationGroups.UserUpdateGroup;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -34,10 +35,10 @@ public class User extends Param {
     public String login_id;
 
     @ApiModelProperty(example = "비밀번호")
-//    @NotBlank(groups = { UserCreateGroup.class, UserUpdateGroup.class}, message = "비밀번호는 필수 입력값입니다.")
-//    @Size(groups = { UserCreateGroup.class, UserUpdateGroup.class}, max = 20, message = "최대 20자를 넘길수 없습니다,")
-//    @Pattern(groups = { UserCreateGroup.class, UserUpdateGroup.class}, regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}",
-//        message = "비밀번호는 영문 대,소문자와 숫자, 특수기호가 적어도 1개 이상씩 포함된 8자 ~ 20자의 비밀번호여야 합니다.")
+    @NotBlank(groups = { UserPwUpdateGroup.class}, message = "비밀번호는 필수 입력값입니다.")
+    @Size(groups = { UserPwUpdateGroup.class}, max = 20, message = "최대 20자를 넘길수 없습니다,")
+    @Pattern(groups = {  UserPwUpdateGroup.class}, regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}",
+        message = "비밀번호는 영문 대,소문자와 숫자, 특수기호가 적어도 1개 이상씩 포함된 8자 ~ 20자의 비밀번호여야 합니다.")
     public String user_pw;
 
     @ApiModelProperty(example = "휴대폰 번호")
