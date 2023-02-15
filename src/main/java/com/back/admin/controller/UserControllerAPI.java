@@ -53,9 +53,8 @@ public class UserControllerAPI {
 
         String message = listCount+"건이 조회되었습니다.";
         String code = "ok";
-        Header header = ResponseUtils.setHeader(message, code, httpServletRequest);
 
-        responseMap.put("header", header);
+        responseMap.put("header", ResponseUtils.setHeader(message, code, httpServletRequest));
         responseMap.put("data", list);
         responseMap.put("total", listCount);
 
@@ -78,12 +77,11 @@ public class UserControllerAPI {
 
         String message = count+"건이 조회되었습니다.";
         String code = "ok";
-        Header header = ResponseUtils.setHeader(message, code, httpServletRequest);
 
-        responseMap.put("header", header);
+        responseMap.put("header", ResponseUtils.setHeader(message, code, httpServletRequest));
         responseMap.put("data", data);
 
-        return new ResponseEntity<> (responseMap, HttpStatus.OK);
+        return new ResponseEntity<> (responseMap,  HttpStatus.OK);
     }
 
 
@@ -93,10 +91,9 @@ public class UserControllerAPI {
         @ApiParam(
             value = "user_nm : 이름, 필수값, 2~10자 \n"
                 +"login_id : 이메일형식, 필수값, 이메일형식 제한 \n"
-                +"user_pw : 비밀번호, 필수값, 최대 20자, 비밀번호형식(영문 대,소문자와 숫자, 특수기호가 적어도 1개 이상씩 포함된 8자 ~ 20자) \n"
                 +"tel_no : 휴대폰, 필수값, 휴대폰번호형식 제한"
         )
-        @Validated(ValidationGroups.UserCreateGroup.class) @RequestBody UserEntity userEntity, HttpServletRequest httpServletRequest)
+        @Validated({ValidationGroups.UserCreateGroup.class, ValidationGroups.UserUpdateGroup.class}) @RequestBody UserEntity userEntity, HttpServletRequest httpServletRequest)
         throws Exception {
         LinkedHashMap <String,Object> responseMap = new LinkedHashMap<>();
 
@@ -112,6 +109,7 @@ public class UserControllerAPI {
             status = HttpStatus.BAD_REQUEST;
         }else {
             userEntity.created_id = jwtUtils.getTokenInfo(jwtUtils.resolveToken(httpServletRequest),"user_id");
+            userEntity.user_pw = userEntity.login_id;
             int result = userService.saveUser(userEntity);
 
             if(result < 1){
@@ -121,8 +119,7 @@ public class UserControllerAPI {
             }
         }
 
-        Header header = ResponseUtils.setHeader(message, code, httpServletRequest);
-        responseMap.put("header", header);
+        responseMap.put("header", ResponseUtils.setHeader(message, code, httpServletRequest));
 
         return new ResponseEntity<>(responseMap, status);
     }
@@ -152,8 +149,7 @@ public class UserControllerAPI {
             status = HttpStatus.BAD_REQUEST;
         }
 
-        Header header = ResponseUtils.setHeader(message, code, httpServletRequest);
-        responseMap.put("header", header);
+        responseMap.put("header", ResponseUtils.setHeader(message, code, httpServletRequest));
 
         return new ResponseEntity<>(responseMap, status);
     }
@@ -180,16 +176,19 @@ public class UserControllerAPI {
             status = HttpStatus.BAD_REQUEST;
         }
 
-        Header header = ResponseUtils.setHeader(message, code, httpServletRequest);
-        responseMap.put("header", header);
+        responseMap.put("header", ResponseUtils.setHeader(message, code, httpServletRequest));
 
         return new ResponseEntity<>(responseMap, status);
     }
 
 
-    @ApiOperation(value = "사용자 비밀번호를 수정한다.")
+    @ApiOperation(value = "사용자 비밀번호를 초기화한다.")
     @PutMapping("/user-pw")
     public ResponseEntity<Map<String,Object>> updateUserPw(
+        @ApiParam(
+            value = "user_id : 사용자식별키, 필수값 \n"
+                +"login_id : 로그인아이디, 필수값 \n"
+        )
         @RequestBody UserEntity userEntity, HttpServletRequest httpServletRequest) throws Exception {
         LinkedHashMap <String,Object> responseMap = new LinkedHashMap<>();
 
@@ -198,9 +197,9 @@ public class UserControllerAPI {
         HttpStatus status = HttpStatus.OK;
 
         userEntity.updated_id = jwtUtils.getTokenInfo(jwtUtils.resolveToken(httpServletRequest),"user_id");
-        if("N".equals(userEntity.pw_init_yn)){
-            userEntity.user_pw = userEntity.login_id;
-        }
+        userEntity.user_pw = userEntity.login_id;
+        userEntity.pw_init_yn = "N";
+        userEntity.pw_fail_cnt = 0;
 
         int result = userService.updateUser(userEntity);
 
@@ -221,16 +220,15 @@ public class UserControllerAPI {
     @ApiImplicitParams({
         @ApiImplicitParam(name = "user_id", value = "사용자식별키", required = true, dataType = "String", paramType = "path", example = "USOOOOOOO1"),
     })
-    @PutMapping("/pw-fail-cnt/{user_id}")
-    public ResponseEntity<Map<String,Object>> updatePwFailCnt(
-        @RequestBody UserEntity userEntity,
-        @PathVariable String user_id, HttpServletRequest httpServletRequest) throws Exception {
+    @GetMapping("/pw-fail-cnt/{user_id}")
+    public ResponseEntity<Map<String,Object>> updatePwFailCnt(@PathVariable String user_id, HttpServletRequest httpServletRequest) throws Exception {
         LinkedHashMap <String,Object> responseMap = new LinkedHashMap<>();
 
         String message = "사용자의 잠금이 해제되었습니다.";
         String code = "ok";
         HttpStatus status = HttpStatus.OK;
 
+        UserEntity userEntity = new UserEntity();
         userEntity.user_id = user_id;
         userEntity.updated_id = jwtUtils.getTokenInfo(jwtUtils.resolveToken(httpServletRequest),"user_id");
         userEntity.pw_fail_init = "Y";
