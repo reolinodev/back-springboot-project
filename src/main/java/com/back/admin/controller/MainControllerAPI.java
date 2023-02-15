@@ -43,6 +43,10 @@ public class MainControllerAPI {
     public ResponseEntity<Map<String,Object>> getUserData(HttpServletRequest httpServletRequest) {
         LinkedHashMap<String,Object> responseMap = new LinkedHashMap<>();
 
+        String message ="정상적으로 조회되었습니다.";
+        String code = "ok";
+        HttpStatus status = HttpStatus.OK;
+
         LoginEntity loginEntity = new LoginEntity();
         loginEntity.user_id = jwtUtils.getTokenInfo(jwtUtils.resolveToken(httpServletRequest),"user_id");
         loginEntity.auth_id = jwtUtils.getTokenInfo(jwtUtils.resolveToken(httpServletRequest),"auth_id");
@@ -50,23 +54,23 @@ public class MainControllerAPI {
         loginEntity.user_nm = jwtUtils.getTokenInfo(jwtUtils.resolveToken(httpServletRequest),"user_nm");
         loginEntity.data_type = dataType;
 
-        String message = "1 개가 조회되었습니다.";
-        String code = "ok";
-        Header header = ResponseUtils.setHeader(message, code, httpServletRequest);
-
-        responseMap.put("header", header);
+        responseMap.put("header", ResponseUtils.setHeader(message, code, httpServletRequest));
         responseMap.put("data", loginEntity);
 
-        return new ResponseEntity<> (responseMap,  HttpStatus.OK);
+        return new ResponseEntity<> (responseMap,  status);
     }
 
-    @ApiOperation(value = "메뉴 목록을 조회한다.")
+    @ApiOperation(value = "메뉴목록을 조회한다.")
     @PostMapping("/nav")
     public ResponseEntity<Map<String,Object>> getNavList(
         @RequestBody MenuEntity menuEntity, HttpServletRequest httpServletRequest)
         throws IOException, ParseException {
         LinkedHashMap<String,Object> responseMap = new LinkedHashMap<>();
         LinkedHashMap<String,Object> data = new LinkedHashMap<>();
+
+        String message ="정상적으로 조회되었습니다.";
+        String code = "ok";
+        HttpStatus status = HttpStatus.OK;
 
         if("json".equals(dataType)) {
             data = JsonUtils.getJsonMenu();
@@ -82,13 +86,9 @@ public class MainControllerAPI {
             data.put("menuLv2List", menuLv2List);
         }
 
-        String message =" 정상적으로 조회되었습니다.";
-        String code = "ok";
-        Header header = ResponseUtils.setHeader(message, code, httpServletRequest);
-
-        responseMap.put("header", header);
+        responseMap.put("header", ResponseUtils.setHeader(message, code, httpServletRequest));
         responseMap.put("data", data);
 
-        return new ResponseEntity<> (responseMap,  HttpStatus.OK);
+        return new ResponseEntity<> (responseMap,  status);
     }
 }

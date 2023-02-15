@@ -61,7 +61,7 @@ public class JwtFilter extends OncePerRequestFilter {
                         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                         response.setCharacterEncoding("UTF-8");
                         response.setStatus(HttpStatus.FORBIDDEN.value());
-                        resBody.put("result_code", HttpStatus.FORBIDDEN.value());
+                        resBody.put("result_code", "tokenInvalid");
                         resBody.put("message", "인증토큰이 유효하지 않습니다.");
                         mapper.writeValue(response.getWriter(), resBody);
                     }
@@ -77,7 +77,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 if("Y".equals(tokenLong)){
                     response.setStatus(HttpStatus.FORBIDDEN.value());
-                    resBody.put("result_code", HttpStatus.FORBIDDEN.value());
+                    resBody.put("result_code", "tokenInvalid");
                     resBody.put("message", "인증토큰이 유효하지 않습니다.");
                 }else{
                     LoginEntity loginEntity = loginService.getTokenInfo(params);
@@ -88,26 +88,25 @@ public class JwtFilter extends OncePerRequestFilter {
 
                     if(!"".equals(refreshToken)){
                         if (jwtUtils.validateToken(refreshToken)) {
-                            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-
+                            response.setStatus(HttpStatus.OK.value());
                             LoginEntity loginData = loginService.getLoginId(loginEntity.login_id);
                             String accessToken = jwtUtils.generateToken(loginData);
                             loginData.access_token = accessToken;
                             loginService.saveToken(loginData);
 
-                            resBody.put("result_code", HttpStatus.UNAUTHORIZED.value());
+                            resBody.put("result_code", "newToken");
                             resBody.put("message", "새 인증토큰을 발급했습니다.");
                             resBody.put("new_token", accessToken);
                             resBody.put("new_expired_token_time", jwtUtils.getValidTime(accessToken));
                         }else {
                             response.setStatus(HttpStatus.FORBIDDEN.value());
-                            resBody.put("result_code", HttpStatus.FORBIDDEN.value());
+                            resBody.put("result_code", "tokenInvalid");
                             resBody.put("message", "인증토큰이 유효하지 않습니다.");
                         }
 
                     }else{
                         response.setStatus(HttpStatus.FORBIDDEN.value());
-                        resBody.put("result_code", HttpStatus.FORBIDDEN.value());
+                        resBody.put("result_code", "tokenInvalid");
                         resBody.put("message", "인증토큰이 유효하지 않습니다.");
                     }
                 }

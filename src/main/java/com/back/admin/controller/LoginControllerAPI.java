@@ -59,7 +59,7 @@ public class LoginControllerAPI {
         int countLoginId = loginService.checkLoginId(loginEntity);
         if(countLoginId == 0){
             message = "아이디가 존재하지 않습니다.";
-            code = "fail";
+            code = "unauthorized";
             status = HttpStatus.UNAUTHORIZED;
             jwtHeader = ResponseUtils.setJwtHeader(message, code, accessToken, refreshToken, httpServletRequest);
             responseMap.put("header", jwtHeader);
@@ -70,7 +70,7 @@ public class LoginControllerAPI {
         int countUserPw = loginService.checkUserPw(loginEntity);
         if(countUserPw == 0){
             message = "비밀번호가 일치하지 않습니다.";
-            code = "fail";
+            code = "unauthorized";
             status = HttpStatus.UNAUTHORIZED;
 
             loginService.updatePwfailCnt(loginEntity);
@@ -84,7 +84,7 @@ public class LoginControllerAPI {
 
         if(loginData.pw_fail_cnt > 5){
             message = "비밀번호 입력을 5회이상 실패하셨습니다. 관리자에게 문의 바랍니다.";
-            code = "fail";
+            code = "unauthorized";
             status = HttpStatus.UNAUTHORIZED;
 
             jwtHeader = ResponseUtils.setJwtHeader(message, code, accessToken, refreshToken, httpServletRequest);
@@ -92,7 +92,7 @@ public class LoginControllerAPI {
             return new ResponseEntity<>(responseMap, status);
         }else if("".equals(loginData.auth_id)){
             message = "사용자의 권한이 존재하지 않습니다. 관리자에게 문의 바랍니다.";
-            code = "fail";
+            code = "unauthorized";
             status = HttpStatus.UNAUTHORIZED;
 
             jwtHeader = ResponseUtils.setJwtHeader(message, code, accessToken, refreshToken, httpServletRequest);
@@ -127,7 +127,7 @@ public class LoginControllerAPI {
 
         LinkedHashMap <String,Object> responseMap = new LinkedHashMap<>();
 
-        String message = "";
+        String message = "메인화면으로 이동합니다";
         String code = "ok";
         HttpStatus status = HttpStatus.OK;
 
@@ -146,10 +146,8 @@ public class LoginControllerAPI {
 
             if(result < 1){
                 message = "로그인에 실패하였습니다..";
-                code = "fail";
+                code = "unauthorized";
                 status = HttpStatus.UNAUTHORIZED;
-            }else{
-                message = "메인화면으로 이동합니다.";
             }
         }
 
