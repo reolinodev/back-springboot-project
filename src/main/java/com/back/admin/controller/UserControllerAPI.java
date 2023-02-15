@@ -93,7 +93,7 @@ public class UserControllerAPI {
                 +"login_id : 이메일형식, 필수값, 이메일형식 제한 \n"
                 +"tel_no : 휴대폰, 필수값, 휴대폰번호형식 제한"
         )
-        @Validated({ValidationGroups.UserCreateGroup.class, ValidationGroups.UserUpdateGroup.class}) @RequestBody UserEntity userEntity, HttpServletRequest httpServletRequest)
+        @Validated({ValidationGroups.UserCreateGroup.class}) @RequestBody UserEntity userEntity, HttpServletRequest httpServletRequest)
         throws Exception {
         LinkedHashMap <String,Object> responseMap = new LinkedHashMap<>();
 
