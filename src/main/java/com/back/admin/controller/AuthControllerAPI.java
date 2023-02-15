@@ -41,23 +41,21 @@ public class AuthControllerAPI {
     @PostMapping("")
     public ResponseEntity<Map<String,Object>> getAuthList(
         @ApiParam(
-            value = "search_str : 권한명 / 권한코드, 널허용 \n"
-                +"use_yn : 사용여부 ,널허용 \n"
-                +"page_per : 페이지당 항목 수, 필수값  \n"
-                +"current_page : 현재 페이지, 필수값\n"
+            value = "search_str : 권한명 / 권한코드,  \n"
+                +"use_yn : 사용여부 \n"
+                +"page_per : 페이지당 항목 수  \n"
+                +"current_page : 현재 페이지\n"
         )
         @RequestBody AuthEntity authEntity, HttpServletRequest httpServletRequest){
-
         LinkedHashMap <String,Object> responseMap = new LinkedHashMap<>();
 
         List<AuthEntity> list = authService.getAuthList(authEntity);
         int listCount = authService.getAuthCount(authEntity);
 
-        String message = listCount+" 개가 조회되었습니다.";
+        String message = listCount+"건이 조회되었습니다.";
         String code = "ok";
-        Header header = ResponseUtils.setHeader(message, code, httpServletRequest);
 
-        responseMap.put("header", header);
+        responseMap.put("header", ResponseUtils.setHeader(message, code, httpServletRequest));
         responseMap.put("data", list);
         responseMap.put("total", listCount);
 
@@ -79,7 +77,7 @@ public class AuthControllerAPI {
         LinkedHashMap <String,Object> responseMap = new LinkedHashMap<>();
         authEntity.created_id = jwtUtils.getTokenInfo(jwtUtils.resolveToken(httpServletRequest),"user_id");
 
-        String message = "권한이 생성되었습니다..";
+        String message = "권한이 생성되었습니다.";
         String code = "ok";
         HttpStatus status = HttpStatus.CREATED;
 
@@ -99,8 +97,7 @@ public class AuthControllerAPI {
             }
         }
 
-        Header header = ResponseUtils.setHeader(message, code, httpServletRequest);
-        responseMap.put("header", header);
+        responseMap.put("header", ResponseUtils.setHeader(message, code, httpServletRequest));
 
         return new ResponseEntity<>(responseMap, status);
     }
@@ -117,11 +114,10 @@ public class AuthControllerAPI {
         int count = 0;
         if (!"".equals(data.getAuth_nm())) count= 1;
 
-        String message = count+" 개가 조회되었습니다.";
+        String message = count+"건이 조회되었습니다.";
         String code = "ok";
-        Header header = ResponseUtils.setHeader(message, code, httpServletRequest);
 
-        responseMap.put("header", header);
+        responseMap.put("header", ResponseUtils.setHeader(message, code, httpServletRequest));
         responseMap.put("data", data);
 
         return new ResponseEntity<> (responseMap, HttpStatus.OK);
@@ -135,8 +131,6 @@ public class AuthControllerAPI {
     public ResponseEntity<Map<String,Object>> updateAuth(
         @ApiParam(
             value = "auth_nm : 권한명, 15자 \n"
-                +"auth_val : 권한코드, 20자 (영문만)  \n"
-                +"auth_role : 권한구분, 20자 (영문만)  \n"
                 +"ord : 권한 순서\n"
                 +"memo : 비고 \n"
                 +"use_yn : 사용여부 \n"
@@ -159,8 +153,7 @@ public class AuthControllerAPI {
             status = HttpStatus.BAD_REQUEST;
         }
 
-        Header header = ResponseUtils.setHeader(message, code, httpServletRequest);
-        responseMap.put("header", header);
+        responseMap.put("header", ResponseUtils.setHeader(message, code, httpServletRequest));
 
         return new ResponseEntity<>(responseMap, status);
     }
@@ -174,17 +167,20 @@ public class AuthControllerAPI {
         throws Exception {
         LinkedHashMap <String,Object> responseMap = new LinkedHashMap<>();
 
-        int result = authService.deleteAuth(auth_id);
         String message = "권한이 삭제 되었습니다.";
         String code = "ok";
+        HttpStatus status = HttpStatus.OK;
+
+        int result = authService.deleteAuth(auth_id);
+
         if(result < 1){
             message ="정상적으로 삭제 되지 않았습니다.";
             code = "fail";
+            status = HttpStatus.BAD_REQUEST;
         }
 
-        Header header = ResponseUtils.setHeader(message, code, httpServletRequest);
-        responseMap.put("header", header);
+        responseMap.put("header", ResponseUtils.setHeader(message, code, httpServletRequest));
 
-        return new ResponseEntity<>(responseMap, HttpStatus.OK);
+        return new ResponseEntity<>(responseMap, status);
     }
 }

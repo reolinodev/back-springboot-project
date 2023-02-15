@@ -22,8 +22,8 @@ public class Auth extends Param {
     public String auth_id;
 
     @ApiModelProperty(example = "권한명")
-    @NotEmpty(groups = {AuthCreateGroup.class}, message = "권한명을 입력해 주세요.")
-    @Size(groups = {AuthCreateGroup.class}, max = 15, message = "최대 15자까지 입력해주세요.")
+    @NotEmpty(groups = {AuthCreateGroup.class, AuthUpdateGroup.class}, message = "권한명을 입력해 주세요.")
+    @Size(groups = {AuthCreateGroup.class, AuthUpdateGroup.class}, max = 15, message = "최대 15자까지 입력해주세요.")
     public String auth_nm;
 
     @ApiModelProperty(example = "권한코드")
@@ -42,7 +42,7 @@ public class Auth extends Param {
     @Size(groups = {AuthCreateGroup.class}, max = 150, message = "최대 150자까지 입력해주세요.")
     public String memo;
 
-    @NotBlank(groups = { AuthUpdateGroup.class}, message = "사용여부는 필수 입력 값입니다.")
+    @NotBlank(groups = { AuthUpdateGroup.class, AuthUpdateGroup.class}, message = "사용여부는 필수 입력 값입니다.")
     @ApiModelProperty(example = "사용여부")
     public String use_yn;
 
