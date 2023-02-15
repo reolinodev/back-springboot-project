@@ -63,7 +63,7 @@ public class GlobalControllerAdvice {
         errorResponse.error_list = errorList;
         errorResponse.message = "Request Body를 확인해주세요.";
         errorResponse.request_url = httpServletRequest.getRequestURI();
-        errorResponse.result_code = "vaild";
+        errorResponse.result_code = "invalid";
         map.put("header", errorResponse);
 
         return new ResponseEntity<> (map, HttpStatus.BAD_REQUEST);
