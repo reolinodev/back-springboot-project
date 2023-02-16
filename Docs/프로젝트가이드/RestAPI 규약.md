@@ -1,4 +1,4 @@
-- restApi 규약
+## # RestApi status 및 result_code 규약
 
 STATUS|result_code|description|
 |------|---|---|
@@ -9,6 +9,6 @@ STATUS|result_code|description|
 |400|fail|API 실패
 |400|invalid|파라미터 타입 유효하지 않음
 |401|unauthorized|access_token 발급실패|
-|403|tokenInvalid|access_token과 refresh_token이 일치하지 않는 경우|
+|403|tokenInvalid|access_token과 refresh_token 유효기간이 종료 되었을때
 |500|error|서버에러|
 
