@@ -19,6 +19,9 @@ public class UserAuth extends Param {
     @ApiModelProperty(example = "권한식별키")
     public String auth_id;
 
+    @ApiModelProperty(example = "권한구분")
+    public String auth_role;
+
     @ApiModelProperty(example = "사용여부")
     public String use_yn;
     

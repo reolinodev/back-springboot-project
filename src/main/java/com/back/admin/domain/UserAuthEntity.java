@@ -24,6 +24,12 @@ public class UserAuthEntity extends UserAuth {
     @ApiModelProperty(example = "권한명")
     public String auth_nm;
 
+    @ApiModelProperty(example = "권한구분명")
+    public String auth_role_nm;
+
     @ApiModelProperty(example = "사용자 집합")
     public String[] user_arr;
+
+    @ApiModelProperty(example = "휴대폰번호")
+    public String tel_no;
 }

@@ -11,20 +11,25 @@
                 C.USER_NM,
                 C.LOGIN_ID,
                 B.AUTH_NM,
-                B.AUTH_ROLE
-        -- WS.FN_GETCODENM('CORP_CD', C.CORP_CD) as CORP_NM
+                B.AUTH_ROLE,
+                FN_GETCODENM('AUTH_ROLE', B.AUTH_ROLE) AS AUTH_ROLE_NM
         FROM    TB_USER_AUTH A, TB_AUTH B, TB_USER C
         WHERE   A.AUTH_ID = B.AUTH_ID
         AND     A.USER_ID = C.USER_ID
         AND     A.USE_YN = 'Y'
         AND     B.USE_YN = 'Y'
         AND     C.USE_YN = 'Y'
+        <if test="auth_role != null and auth_role != ''">
+        AND     B.AUTH_ROLE = #{auth_role}
+        </if>
         <if test="auth_id != null and auth_id != ''">
         AND     A.AUTH_ID = #{auth_id}
         </if>
-        <if test="search_str != null and search_str != ''">
-        AND     (UPPER(C.LOGIN_ID) LIKE  '%'||UPPER(#{search_str})||'%'
-        OR      UPPER(C.USER_NM) LIKE  '%'||UPPER(#{search_str})||'%')
+        <if test="login_id != null and login_id != ''">
+        AND     UPPER(C.LOGIN_ID) LIKE  '%'||UPPER(#{login_id})||'%'
+        </if>
+        <if test="user_nm != null and user_nm != ''">
+        AND     UPPER(C.USER_NM) LIKE  '%'||UPPER(#{user_nm})||'%'
         </if>
         ORDER BY A.AUTH_ID ASC, A.CREATED_AT DESC
         OFFSET  #{start_idx} limit #{page_per}
@@ -45,9 +50,11 @@
         <if test="auth_id != null and auth_id != ''">
         AND     A.AUTH_ID = #{auth_id}
         </if>
-        <if test="search_str != null and search_str != ''">
-        AND     (UPPER(C.LOGIN_ID) LIKE  '%'||UPPER(#{search_str})||'%'
-        OR      UPPER(C.USER_NM) LIKE  '%'||UPPER(#{search_str})||'%')
+        <if test="login_id != null and login_id != ''">
+        AND     UPPER(C.LOGIN_ID) LIKE  '%'||UPPER(#{login_id})||'%'
+        </if>
+        <if test="user_nm != null and user_nm != ''">
+        AND     UPPER(C.USER_NM) LIKE  '%'||UPPER(#{user_nm})||'%'
         </if>
     </select>
 
@@ -56,7 +63,8 @@
         SELECT  ROW_NUMBER() OVER (ORDER BY USER_ID DESC) RNUM,
                 USER_ID,
                 LOGIN_ID,
-                USER_NM
+                USER_NM,
+                TEL_NO
         FROM    TB_USER
         WHERE   USE_YN = 'Y'
         AND     USER_ID NOT IN (

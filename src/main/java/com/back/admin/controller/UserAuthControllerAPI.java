@@ -35,12 +35,11 @@ public class UserAuthControllerAPI {
     @PostMapping("")
     public ResponseEntity<Map<String,Object>> getUserAuthList(
         @ApiParam(
-            value = "auth_id : 권한 아이디 , 널허용 \n"
-                +   "search_str : 검색어 ,널허용\n"
-                +   "page_per : 페이지당 항목수 ,필수\n"
-                +   "current_page : 현재 페이지, 필수\n")
+            value = "auth_id : 권한 아이디 \n"
+                +   "search_str : 검색어\n"
+                +   "page_per : 페이지당 항목수\n"
+                +   "current_page : 현재 페이지\n")
         @RequestBody UserAuthEntity userAuthEntity, HttpServletRequest httpServletRequest){
-
         LinkedHashMap<String,Object> responseMap = new LinkedHashMap<>();
 
         List<UserAuthEntity> list = userAuthService.getUserAuthList(userAuthEntity);
@@ -48,9 +47,8 @@ public class UserAuthControllerAPI {
 
         String message = listCount+" 개가 조회되었습니다.";
         String code = "ok";
-        Header header = ResponseUtils.setHeader(message, code, httpServletRequest);
 
-        responseMap.put("header", header);
+        responseMap.put("header", ResponseUtils.setHeader(message, code, httpServletRequest));
         responseMap.put("data", list);
         responseMap.put("total", listCount);
 
