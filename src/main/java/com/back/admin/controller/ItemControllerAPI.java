@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -59,7 +60,7 @@ public class ItemControllerAPI {
         LinkedHashMap <String,Object> responseMap = new LinkedHashMap<>();
         List<AuthEntity> list = itemService.getItemAuthList(use_yn);
 
-        String message = list.size()+" 개가 조회되었습니다.";
+        String message = list.size()+"건이 조회되었습니다.";
         String code = "ok";
         Header header = ResponseUtils.setHeader(message, code, httpServletRequest);
 
@@ -71,13 +72,13 @@ public class ItemControllerAPI {
 
 
     @ApiOperation(value = "사용가능한 권한구분별 리스트를 조회한다.")
-    @GetMapping("/auth/auth-role/{auth_role}")
+    @PostMapping("/auth/auth-role/{auth_role}")
     public ResponseEntity <Map<String,Object>> getItemAuthRoleList(@PathVariable String auth_role, HttpServletRequest httpServletRequest) {
 
         LinkedHashMap <String,Object> responseMap = new LinkedHashMap<>();
         List<AuthEntity> list = itemService.getItemAuthRoleList(auth_role);
 
-        String message = list.size()+" 개가 조회되었습니다.";
+        String message = list.size()+"건이 조회되었습니다.";
         String code = "ok";
         Header header = ResponseUtils.setHeader(message, code, httpServletRequest);
 
@@ -90,11 +91,10 @@ public class ItemControllerAPI {
     @ApiOperation(value = "내가 가진 권한을 가져온다.")
     @PostMapping("/auth/mine/{user_id}")
     public ResponseEntity <Map<String,Object>> getItemMyAuthList(@PathVariable String user_id, HttpServletRequest httpServletRequest) {
-
         LinkedHashMap <String,Object> responseMap = new LinkedHashMap<>();
         List<AuthEntity> list = itemService.getItemMyAuthList(user_id);
 
-        String message = list.size()+" 개가 조회되었습니다.";
+        String message = list.size()+"건이 조회되었습니다.";
         String code = "ok";
         Header header = ResponseUtils.setHeader(message, code, httpServletRequest);
 
@@ -106,13 +106,13 @@ public class ItemControllerAPI {
 
 
     @ApiOperation(value = "상위의 메뉴들을 조회한다.")
-    @GetMapping("/menu/prn")
-    public ResponseEntity<Map<String,Object>> getItemPrnMenuList(HttpServletRequest httpServletRequest) {
+    @PostMapping("/menu/prn-menu/{auth_role}")
+    public ResponseEntity<Map<String,Object>> getItemPrnMenuList(@PathVariable String auth_role, HttpServletRequest httpServletRequest) {
         LinkedHashMap <String,Object> responseMap = new LinkedHashMap<>();
 
-        List<MenuEntity> list = itemService.getItemPrnMenuList();
+        List<MenuEntity> list = itemService.getItemPrnMenuList(auth_role);
 
-        String message = list.size()+" 개가 조회되었습니다.";
+        String message = list.size()+"건이 조회되었습니다.";
         String code = "ok";
         Header header = ResponseUtils.setHeader(message, code, httpServletRequest);
 
@@ -123,14 +123,14 @@ public class ItemControllerAPI {
     }
 
 
-    @ApiOperation(value = "게시판에서 내가 가진 권한을 가져온다.")
-    @GetMapping("/board/use-yn/{use_yn}")
+    @ApiOperation(value = "게시판에서 사용가능한 권한을 가져온다.")
+    @PostMapping("/board/use-yn/{use_yn}")
     public ResponseEntity <Map<String,Object>> getItemUseYnBoardList(@PathVariable String use_yn, HttpServletRequest httpServletRequest) {
 
         LinkedHashMap <String,Object> responseMap = new LinkedHashMap<>();
         List<BoardEntity> list = itemService.getItemUseYnBoardList(use_yn);
 
-        String message = list.size()+" 개가 조회되었습니다.";
+        String message = list.size()+"건이 조회되었습니다.";
         String code = "ok";
         Header header = ResponseUtils.setHeader(message, code, httpServletRequest);
 

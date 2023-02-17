@@ -73,8 +73,8 @@
         ORDER BY CAST(ORD AS INTEGER) ASC
     </select>
 
-    <select id="findMenuByMenuLv" parameterType="int" resultType="menuEntity">
-        /* sql : ItemRepository.findMenuByMenuLv */
+    <select id="findMenuByMenuLvAndAuthRole" parameterType="menuEntity" resultType="menuEntity">
+        /* sql : ItemRepository.findMenuByMenuLvAndAuthRole */
         SELECT  MENU_ID,
                 MENU_NM,
                 MENU_LV,
@@ -85,6 +85,7 @@
                 USE_YN
         FROM    TB_MENU
         WHERE   MENU_LV = #{menu_lv}
+        AND     AUTH_ROLE = #{auth_role}
         ORDER BY CAST(ORD AS INTEGER) ASC
     </select>
 

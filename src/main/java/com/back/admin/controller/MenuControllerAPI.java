@@ -179,7 +179,7 @@ public class MenuControllerAPI {
             code = "fail";
             status = HttpStatus.BAD_REQUEST;
         }else if(result == -1){
-            message ="하위 메뉴가 존재합니다.";
+            message ="소메뉴가 존재합니다.";
             code = "fail";
             status = HttpStatus.BAD_REQUEST;
         }

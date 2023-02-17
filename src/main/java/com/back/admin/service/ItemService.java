@@ -31,9 +31,11 @@ public class ItemService {
         return itemRepository.findAuthByAuthRole(authRole);
     }
 
-    public List<MenuEntity> getItemPrnMenuList() {
-        int menuLv = 1;
-        return itemRepository.findMenuByMenuLv(menuLv);
+    public List<MenuEntity> getItemPrnMenuList(String authRole) {
+        MenuEntity menuEntity = new MenuEntity();
+        menuEntity.auth_role = authRole;
+        menuEntity.menu_lv = 1;
+        return itemRepository.findMenuByMenuLvAndAuthRole(menuEntity);
     }
 
     public List<BoardEntity> getItemUseYnBoardList(String useYn) {

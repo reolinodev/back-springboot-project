@@ -18,7 +18,7 @@ public interface ItemRepository {
 
     List<AuthEntity> findAuthByAuthRole(String authRole);
 
-    List<MenuEntity> findMenuByMenuLv(int menuLv);
+    List<MenuEntity> findMenuByMenuLvAndAuthRole(MenuEntity menuEntity);
 
     List<BoardEntity> findBoardByUseYn(String useYn);
 

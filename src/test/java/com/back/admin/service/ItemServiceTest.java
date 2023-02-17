@@ -52,9 +52,9 @@ class ItemServiceTest {
     @Test
     public void getPrnMenuList() {
         //given
-
+        String authRole = "ADMIN_WEB";
         //when
-        List<MenuEntity> result = itemService.getItemPrnMenuList();
+        List<MenuEntity> result = itemService.getItemPrnMenuList(authRole);
 
         //then
         Assertions.assertEquals(3, result.size());
