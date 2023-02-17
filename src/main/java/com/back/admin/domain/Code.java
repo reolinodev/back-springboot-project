@@ -41,6 +41,9 @@ public class Code extends Param {
     @ApiModelProperty(example = "순서")
     public String ord;
 
+    @ApiModelProperty(example = "상위코드")
+    public String prn_code_val;
+
     @ApiModelProperty(example = "사용여부")
     public String use_yn;
 

@@ -16,6 +16,7 @@
                         CASE WHEN ORD = '' THEN '99999'
                         ELSE ORD END AS ORDS,
                         USE_YN,
+                        PRN_CODE_VAL,
                         CREATED_AT,
                         CREATED_ID,
                         UPDATED_AT,
@@ -36,6 +37,7 @@
             CODE_VAL,
             MEMO,
             ORD,
+            PRN_CODE_VAL,
             CREATED_AT,
             CREATED_ID
         )
@@ -47,6 +49,7 @@
             #{code_val},
             #{memo},
             #{ord},
+            #{prn_code_val},
             now(),
             #{created_id}
         )
@@ -61,6 +64,7 @@
                 , ORD = #{ord}
                 , CODE_NM = #{code_nm}
                 , USE_YN = #{use_yn}
+                , PRN_CODE_VAL = #{prn_code_val}
         WHERE   CODE_ID = #{code_id}
     </update>
 
@@ -70,26 +74,5 @@
         FROM TB_CODE
         WHERE CODE_ID = #{code_id}
     </delete>
-
-    <!-- -->
-    <select id="findByCodeGrpVal" parameterType="string" resultType="codeEntity">
-        /* sql : codeRepository.findByCodeGrpVal */
-        SELECT *
-        FROM (
-                 SELECT A.CODE_ID,
-                        A.CODE_NM,
-                        A.CODE_VAL,
-                        A.CODE_GRP_ID,
-                        CASE WHEN ORD = '' THEN '99999'
-                             ELSE ORD END AS ORDS
-                 FROM TB_CODE A,
-                      TB_CODE_GRP B
-                 WHERE A.CODE_GRP_ID = B.CODE_GRP_ID
-                   AND B.CD_GRP_VAL = #{code_grp_val}
-                   AND A.USE_YN = 'Y'
-                   AND B.USE_YN = 'Y'
-             ) A
-        ORDER BY CAST(A.ORDS AS INTEGER) ASC
-    </select>
 
 </mapper>
