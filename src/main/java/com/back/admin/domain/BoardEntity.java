@@ -21,6 +21,9 @@ public class BoardEntity extends Board {
     @ApiModelProperty(example = "수정자명")
     public String updated_nm;
 
+    @ApiModelProperty(example = "게시판유형")
+    public String board_type_nm;
+
     @ApiModelProperty(example = "권한식별키 Array")
     public String[] auth_id_arr;
 

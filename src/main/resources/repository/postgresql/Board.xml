@@ -29,9 +29,11 @@
         <if test="board_type != null and board_type != ''">
             AND     BOARD_TYPE = #{board_type}
         </if>
-        <if test="search_str != null and search_str != ''">
-            AND 	(UPPER(BOARD_TITLE) LIKE  '%'||UPPER(#{search_str})||'%'
-            OR 		UPPER(UPDATED_NM) LIKE  '%'||UPPER(#{search_str})||'%')
+        <if test="board_title != null and board_title != ''">
+            AND 	UPPER(BOARD_TITLE) LIKE  '%'||UPPER(#{board_title})||'%'
+        </if>
+        <if test="updated_nm != null and updated_nm != ''">
+            AND 	UPPER(UPDATED_NM) LIKE  '%'||UPPER(#{updated_nm})||'%'
         </if>
         OFFSET  #{start_idx} limit #{page_per}
     </select>
@@ -59,9 +61,14 @@
         <if test="use_yn != null and use_yn != ''">
         AND     USE_YN = #{use_yn}
         </if>
-        <if test="search_str != null and search_str != ''">
-        AND 	(UPPER(BOARD_TITLE) LIKE  '%'||UPPER(#{search_str})||'%'
-        OR 		UPPER(UPDATED_NM) LIKE  '%'||UPPER(#{search_str})||'%')
+        <if test="board_type != null and board_type != ''">
+            AND     BOARD_TYPE = #{board_type}
+        </if>
+        <if test="board_title != null and board_title != ''">
+            AND 	UPPER(BOARD_TITLE) LIKE  '%'||UPPER(#{board_title})||'%'
+        </if>
+        <if test="updated_nm != null and updated_nm != ''">
+            AND 	UPPER(UPDATED_NM) LIKE  '%'||UPPER(#{updated_nm})||'%'
         </if>
     </select>
 
