@@ -48,7 +48,8 @@ public class GlobalControllerAdvice {
 
             String fieldName = field.getField();
             String message = field.getDefaultMessage();
-            String value = field.getRejectedValue().toString();
+            String value = "";
+            if(field.getRejectedValue() != null)  value = field.getRejectedValue().toString() ;
 
             Error errorMessage = new Error();
             errorMessage.field = fieldName;
@@ -58,12 +59,12 @@ public class GlobalControllerAdvice {
             errorList.add(errorMessage);
         });
 
-        LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.error_list = errorList;
         errorResponse.message = "Request Body를 확인해주세요.";
         errorResponse.request_url = httpServletRequest.getRequestURI();
         errorResponse.result_code = "invalid";
+        LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
         map.put("header", errorResponse);
 
         return new ResponseEntity<> (map, HttpStatus.BAD_REQUEST);
