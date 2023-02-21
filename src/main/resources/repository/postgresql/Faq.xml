@@ -11,8 +11,11 @@
                 A.FAQ_TITLE,
                 A.CREATED_AT,
                 TO_CHAR(A.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT,
-                A.UPDATED_ID,
+                TO_CHAR(A.UPDATED_AT, 'YYYY-MM-DD HH24:MI') AS UPDATED_AT,
+                FN_GETUSERNM(A.CREATED_ID) AS CREATED_NM,
                 FN_GETUSERNM(A.UPDATED_ID) AS UPDATED_NM,
+                A.CREATED_ID,
+                A.UPDATED_ID,
                 A.USE_YN,
                 FN_GETCODENM('USE_YN', A.USE_YN) AS USE_YN_NM,
                 B.BOARD_TITLE,
@@ -27,8 +30,8 @@
         <if test="board_id != null and board_id != ''">
         AND     B.BOARD_ID = #{board_id}
         </if>
-        <if test="search_str != null and search_str != ''">
-        AND     UPPER(A.FAQ_TITLE) LIKE  '%'||UPPER(#{search_str})||'%'
+        <if test="faq_title != null and faq_title != ''">
+        AND     UPPER(A.FAQ_TITLE) LIKE  '%'||UPPER(#{faq_title})||'%'
         </if>
         OFFSET  #{start_idx} limit #{page_per}
     </select>
@@ -83,8 +86,11 @@
                 A.BOARD_ID,
                 A.FAQ_TITLE,
                 TO_CHAR(A.CREATED_AT, 'YYYY-MM-DD HH24:MI') AS CREATED_AT,
-                A.UPDATED_ID,
+                TO_CHAR(A.UPDATED_AT, 'YYYY-MM-DD HH24:MI') AS UPDATED_AT,
+                FN_GETUSERNM(A.CREATED_ID) AS CREATED_NM,
                 FN_GETUSERNM(A.UPDATED_ID) AS UPDATED_NM,
+                A.CREATED_ID,
+                A.UPDATED_ID,
                 A.USE_YN,
                 FN_GETCODENM('USE_YN', A.USE_YN) AS USE_YN_NM,
                 B.BOARD_TITLE,
