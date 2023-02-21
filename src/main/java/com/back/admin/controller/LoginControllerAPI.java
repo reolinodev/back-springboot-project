@@ -82,7 +82,16 @@ public class LoginControllerAPI {
 
         LoginEntity loginData = loginService.getLoginId(loginEntity.login_id);
 
-        if(loginData.pw_fail_cnt > 5){
+        if(loginData == null){
+            message = "접속 권한이 없습니다.";
+            code = "unauthorized";
+            status = HttpStatus.UNAUTHORIZED;
+
+            jwtHeader = ResponseUtils.setJwtHeader(message, code, accessToken, refreshToken, httpServletRequest);
+            responseMap.put("header", jwtHeader);
+            return new ResponseEntity<>(responseMap, status);
+        }
+        else if(loginData.pw_fail_cnt > 5){
             message = "비밀번호 입력을 5회이상 실패하셨습니다. 관리자에게 문의 바랍니다.";
             code = "unauthorized";
             status = HttpStatus.UNAUTHORIZED;
@@ -135,6 +144,10 @@ public class LoginControllerAPI {
         String pwInitYn = loginInfo.pw_init_yn;
 
         //초기화를 안했을때
+        if("N".equals(pwInitYn)) {
+            message = "비밀번호 초기화가 필요합니다. 비밀번호 변경 화면으로 이동합니다.";
+            code = "pwchange";
+        }
         if("N".equals(pwInitYn)) {
             message = "비밀번호 초기화가 필요합니다. 비밀번호 변경 화면으로 이동합니다.";
             code = "pwchange";
