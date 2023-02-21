@@ -38,8 +38,8 @@ public class ItemService {
         return itemRepository.findMenuByMenuLvAndAuthRole(menuEntity);
     }
 
-    public List<BoardEntity> getItemUseYnBoardList(String useYn) {
-        return itemRepository.findBoardByUseYn(useYn);
+    public List<BoardEntity> getItemUseYnBoardList(BoardEntity boardEntity) {
+        return itemRepository.findBoardByUseYnAndBoardType(boardEntity);
     }
 
 }

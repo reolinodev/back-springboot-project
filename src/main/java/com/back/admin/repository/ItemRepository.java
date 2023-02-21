@@ -20,6 +20,6 @@ public interface ItemRepository {
 
     List<MenuEntity> findMenuByMenuLvAndAuthRole(MenuEntity menuEntity);
 
-    List<BoardEntity> findBoardByUseYn(String useYn);
+    List<BoardEntity> findBoardByUseYnAndBoardType(BoardEntity boardEntity);
 
 }

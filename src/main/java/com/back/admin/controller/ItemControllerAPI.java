@@ -124,11 +124,14 @@ public class ItemControllerAPI {
 
 
     @ApiOperation(value = "게시판에서 사용가능한 권한을 가져온다.")
-    @PostMapping("/board/use-yn/{use_yn}")
-    public ResponseEntity <Map<String,Object>> getItemUseYnBoardList(@PathVariable String use_yn, HttpServletRequest httpServletRequest) {
+    @PostMapping("/board/{board_type}/{use_yn}")
+    public ResponseEntity <Map<String,Object>> getItemUseYnBoardList(@PathVariable String board_type, @PathVariable String use_yn, HttpServletRequest httpServletRequest) {
 
         LinkedHashMap <String,Object> responseMap = new LinkedHashMap<>();
-        List<BoardEntity> list = itemService.getItemUseYnBoardList(use_yn);
+        BoardEntity boardEntity = new BoardEntity();
+        boardEntity.board_type = board_type;
+        boardEntity.use_yn = use_yn;
+        List<BoardEntity> list = itemService.getItemUseYnBoardList(boardEntity);
 
         String message = list.size()+"건이 조회되었습니다.";
         String code = "ok";

@@ -89,13 +89,14 @@
         ORDER BY CAST(ORD AS INTEGER) ASC
     </select>
 
-    <select id="findBoardByUseYn" parameterType="string" resultType="boardEntity">
-        /* sql : ItemRepository.findBoardByUseYn */
+    <select id="findBoardByUseYnAndBoardType" parameterType="boardEntity" resultType="boardEntity">
+        /* sql : ItemRepository.findBoardByUseYnAndBoardType */
         SELECT  BOARD_ID,
                 BOARD_TITLE,
                 USE_YN
         FROM    TB_BOARD
-        WHERE   USE_YN =#{use_yn}
+        WHERE   USE_YN = #{use_yn}
+        AND     BOARD_TYPE = #{board_type}
         ORDER BY BOARD_ID
     </select>
 

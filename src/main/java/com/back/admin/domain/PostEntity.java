@@ -27,8 +27,8 @@ public class PostEntity extends Post {
     @ApiModelProperty(example = "권한식별키")
     public String auth_id;
 
-    @ApiModelProperty(example = "수정자명")
-    public String updated_nm;
+    @ApiModelProperty(example = "작성자명")
+    public String created_nm;
 
     @ApiModelProperty(example = "사용여부")
     public String use_yn_nm;
