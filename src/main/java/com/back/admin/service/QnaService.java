@@ -24,12 +24,6 @@ public class QnaService {
     }
 
     public int saveQna(QnaEntity qnaEntity) throws Exception {
-        String hiddenYn = qnaEntity.hidden_yn;
-        String qnaPw = qnaEntity.qna_pw;
-
-        if("Y".equals(hiddenYn)&&!"".equals(qnaPw)){
-            qnaEntity.setQna_pw(CryptUtils.encryptSha256(qnaPw));
-        }
         return qnaRepository.save(qnaEntity);
     }
 
@@ -38,15 +32,8 @@ public class QnaService {
     }
 
     public int updateQna(QnaEntity qnaEntity) throws Exception {
-        String hiddenYn = qnaEntity.hidden_yn;
-        String qnaPw = qnaEntity.qna_pw;
-        String mainText = qnaEntity.main_text;
 
-        if("Y".equals(hiddenYn)&&!"".equals(qnaPw)){
-            qnaEntity.setQna_pw(CryptUtils.encryptSha256(qnaPw));
-        }
-
-        if(!"".equals(mainText)){
+        if(!"".equals(qnaEntity.main_text) && qnaEntity.main_text != null){
             qnaEntity.response_yn ="Y";
             qnaEntity.response_id = qnaEntity.updated_id;
         }

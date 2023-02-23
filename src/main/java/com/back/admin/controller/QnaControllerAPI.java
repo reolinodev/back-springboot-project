@@ -1,5 +1,6 @@
 package com.back.admin.controller;
 
+import com.back.admin.domain.FaqEntity;
 import com.back.admin.domain.QnaEntity;
 import com.back.admin.domain.common.ValidationGroups;
 import com.back.admin.service.QnaService;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,7 +50,9 @@ public class QnaControllerAPI {
                 +"start_date : 시작일 \n"
                 +"end_date : 종료일 \n"
                 +"response_yn : 응답여부 \n"
-                +"use_yn : 사용 여부 \n"
+                +"use_yn : 사용여부 \n"
+                +"qna_title : 제목 \n"
+                +"created_nm : 작성자 \n"
         )
         @RequestBody QnaEntity qnaEntity, HttpServletRequest httpServletRequest) {
         Map <String,Object> responseMap = new HashMap<>();
@@ -100,54 +104,26 @@ public class QnaControllerAPI {
         return new ResponseEntity<>(responseMap, status);
     }
 
-
     @ApiOperation(value = "QNA글을 상세조회한다.")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "qna_id", value = "QNA식별키", required = true, dataType = "String", paramType = "path", example = "QN00000001"),
     })
-    @PostMapping("/{qna_id}")
-    public ResponseEntity<Map<String,Object>> getQnaData(@PathVariable String qna_id,
-        @ApiParam(
-            value = "hidden_yn : 제목, 필수 \n"
-                +"qna_pw : 비밀번호  \n"
-                +"view_type : 화면유형, 필수  \n"
-        )
-        @RequestBody QnaEntity qnaEntity, HttpServletRequest httpServletRequest) throws Exception {
+    @GetMapping("/{qna_id}")
+    public ResponseEntity<Map<String,Object>> getQnaData(@PathVariable String qna_id, HttpServletRequest httpServletRequest) throws Exception {
+
         LinkedHashMap <String,Object> responseMap = new LinkedHashMap<>();
-        qnaEntity.qna_id = qna_id;
+        QnaEntity data = qnaService.getQnaData(qna_id);
+        int count = 0;
+        if (!"".equals(data.qna_title)) count= 1;
 
-        String message = "";
+        String message = count+" 개가 조회되었습니다.";
         String code = "ok";
-        HttpStatus status = HttpStatus.OK;
-        QnaEntity data = new QnaEntity();
 
-        if("Y".equals(qnaEntity.hidden_yn)&&"USER".equals(qnaEntity.view_type)){
-            int result = qnaService.checkQnaPw(qnaEntity);
-            if(result != 1){
-                message = "비밀번호가 일치하지 않습니다.";
-                code = "fail";
-                status = HttpStatus.BAD_REQUEST;
-            }else {
-                data = qnaService.getQnaData(qna_id);
-                int count = 0;
-                if (!"".equals(data.qna_title)) count= 1;
-                message = count+" 개가 조회되었습니다.";
-            }
-        }else {
-            data = qnaService.getQnaData(qna_id);
-            int count = 0;
-            if (!"".equals(data.qna_title)) count= 1;
-            message = count+" 개가 조회되었습니다.";
-        }
-
-        Header header = ResponseUtils.setHeader(message, code, httpServletRequest);
-
-        responseMap.put("header", header);
+        responseMap.put("header", ResponseUtils.setHeader(message, code, httpServletRequest));
         responseMap.put("data", data);
 
-        return new ResponseEntity<> (responseMap, status);
+        return new ResponseEntity<> (responseMap,  HttpStatus.OK);
     }
-
 
     @ApiOperation(value = "QNA글을 수정한다.")
     @PutMapping("/{qna_id}")
@@ -158,8 +134,6 @@ public class QnaControllerAPI {
                 +"main_text : 본문 \n"
                 +"use_yn : 사용여부 \n"
                 +"hidden_yn : 비밀글여부 \n"
-                +"qna_pw : 비밀번호 \n"
-                +"view_type : 비밀번호 \n"
         )
         @RequestBody QnaEntity qnaEntity,
         HttpServletRequest httpServletRequest) throws Exception {
@@ -174,6 +148,33 @@ public class QnaControllerAPI {
 
         if(result < 1){
             message ="QNA 수정에 실패하였습니다.";
+            code = "fail";
+            status = HttpStatus.BAD_REQUEST;
+        }
+
+        Header header = ResponseUtils.setHeader(message, code, httpServletRequest);
+        responseMap.put("header", header);
+
+        return new ResponseEntity<>(responseMap, status);
+    }
+
+    @ApiOperation(value = "QNA글을 삭제한다.")
+    @DeleteMapping("/{qna_id}")
+    public ResponseEntity<Map<String,Object>> deleteQna(@PathVariable String qna_id, HttpServletRequest httpServletRequest) throws Exception {
+        Map <String,Object> responseMap = new HashMap<>();
+        QnaEntity qnaEntity = new QnaEntity();
+        qnaEntity.qna_id = qna_id;
+        qnaEntity.updated_id = jwtUtils.getTokenInfo(jwtUtils.resolveToken(httpServletRequest),"user_id");
+        qnaEntity.use_yn = "N";
+
+        int result = qnaService.updateQna(qnaEntity);
+
+        String message = "QNA가 삭제되었습니다.";
+        String code = "ok";
+        HttpStatus status = HttpStatus.OK;
+
+        if(result < 1){
+            message ="QNA 삭제에 실패하였습니다.";
             code = "fail";
             status = HttpStatus.BAD_REQUEST;
         }

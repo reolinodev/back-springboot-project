@@ -30,4 +30,7 @@ public class BoardEntity extends Board {
     @ApiModelProperty(example = "권한식별키")
     public String auth_id;
 
+    @ApiModelProperty(example = "게시판복합키")
+    public String board_val;
+
 }

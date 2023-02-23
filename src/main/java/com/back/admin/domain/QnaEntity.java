@@ -27,12 +27,12 @@ public class QnaEntity extends Qna {
     @ApiModelProperty(example = "답변자")
     public String response_nm;
 
-    @ApiModelProperty(example = "응답여부")
+    @ApiModelProperty(example = "답변여부")
     public String response_yn_nm;
 
     @ApiModelProperty(example = "사용여부")
     public String use_yn_nm;
 
-    @ApiModelProperty(example = "화면유형")
-    public String view_type;
+    @ApiModelProperty(example = "공개여부")
+    public String hidden_yn_nm;
 }

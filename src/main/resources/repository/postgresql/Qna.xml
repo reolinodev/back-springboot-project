@@ -24,7 +24,9 @@
                             FN_GETCODENM('USE_YN', A.USE_YN) AS USE_YN_NM,
                             B.BOARD_TITLE,
                             A.RESPONSE_YN,
-                            FN_GETCODENM('RESPONSE_YN', A.RESPONSE_YN) AS RESPONSE_YN_NM
+                            FN_GETCODENM('RESPONSE_YN', A.RESPONSE_YN) AS RESPONSE_YN_NM,
+                            A.HIDDEN_YN,
+                            FN_GETCODENM('HIDDEN_YN', A.HIDDEN_YN) AS HIDDEN_YN_NM
                     FROM    TB_QNA A,
                             TB_BOARD B
                     WHERE   A.BOARD_ID = B.BOARD_ID
@@ -32,21 +34,23 @@
                     <if test="start_date != null and start_date != ''">
                     AND     TO_CHAR(A.CREATED_AT, 'YYYY-MM-DD') BETWEEN #{start_date} AND #{end_date}
                     </if>
+                    <if test="response_yn != null and response_yn != ''">
+                        AND     A.RESPONSE_YN = #{response_yn}
+                    </if>
+                    <if test="use_yn != null and use_yn != ''">
+                        AND     A.USE_YN = #{use_yn}
+                    </if>
+                    <if test="board_id != null and board_id != ''">
+                        AND     A.BOARD_ID = #{board_id}
+                    </if>
+                    <if test="qna_title != null and qna_title != ''">
+                        AND     UPPER(A.QNA_TITLE) LIKE  '%'||UPPER(#{qna_title})||'%'
+                    </if>
+                    <if test="created_nm != null and created_nm != ''">
+                        AND  UPPER(FN_GETUSERNM(A.CREATED_ID)) LIKE  '%'||UPPER(#{created_nm})||'%'
+                    </if>
         ) A
-        WHERE  1=1
-        <if test="response_yn != null and response_yn != ''">
-        AND     A.RESPONSE_YN = #{response_yn}
-        </if>
-        <if test="use_yn != null and use_yn != ''">
-        AND     A.USE_YN = #{use_yn}
-        </if>
-        <if test="board_id != null and board_id != ''">
-        AND     A.BOARD_ID = #{board_id}
-        </if>
-        <if test="search_str != null and search_str != ''">
-        AND     (UPPER(A.QNA_TITLE) LIKE  '%'||UPPER(#{search_str})||'%'
-        OR UPPER(A.CREATED_NM) LIKE  '%'||UPPER(#{search_str})||'%')
-        </if>
+        OFFSET  #{start_idx} limit #{page_per}
     </select>
 
     <select id="countAll" parameterType="qnaEntity" resultType="int">
@@ -77,22 +81,22 @@
                     <if test="start_date != null and start_date != ''">
                     AND     TO_CHAR(A.CREATED_AT, 'YYYY-MM-DD') BETWEEN #{start_date} AND #{end_date}
                     </if>
+                    <if test="response_yn != null and response_yn != ''">
+                        AND     A.RESPONSE_YN = #{response_yn}
+                    </if>
+                    <if test="use_yn != null and use_yn != ''">
+                        AND     A.USE_YN = #{use_yn}
+                    </if>
+                    <if test="board_id != null and board_id != ''">
+                        AND     A.BOARD_ID = #{board_id}
+                    </if>
+                    <if test="qna_title != null and qna_title != ''">
+                        AND     UPPER(A.QNA_TITLE) LIKE  '%'||UPPER(#{qna_title})||'%'
+                    </if>
+                    <if test="created_nm != null and created_nm != ''">
+                        AND  UPPER(FN_GETUSERNM(A.CREATED_ID)) LIKE  '%'||UPPER(#{created_nm})||'%'
+                    </if>
         ) A
-        WHERE  1=1
-        <if test="response_yn != null and response_yn != ''">
-        AND     A.RESPONSE_YN = #{response_yn}
-        </if>
-        <if test="use_yn != null and use_yn != ''">
-        AND     A.USE_YN = #{use_yn}
-        </if>
-        <if test="board_id != null and board_id != ''">
-        AND     A.BOARD_ID = #{board_id}
-        </if>
-        <if test="search_str != null and search_str != ''">
-        AND     (UPPER(A.QNA_TITLE) LIKE  '%'||UPPER(#{search_str})||'%'
-        OR UPPER(A.CREATED_NM) LIKE  '%'||UPPER(#{search_str})||'%')
-        </if>
-
     </select>
 
     <insert id="save" parameterType="qnaEntity">
@@ -104,9 +108,6 @@
             QNA_TITLE,
             QUESTIONS,
             HIDDEN_YN,
-            <if test="qna_pw != null and qna_pw != ''">
-            QNA_PW,
-            </if>
             CREATED_AT,
             CREATED_ID
         )
@@ -117,9 +118,6 @@
             #{qna_title},
             #{questions},
             #{hidden_yn},
-            <if test="qna_pw != null and qna_pw != ''">
-            #{qna_pw},
-            </if>
             now(),
             #{created_id}
         )
@@ -179,16 +177,6 @@
         </if>
         <if test="hidden_yn != null and hidden_yn != ''">
             , HIDDEN_YN = #{hidden_yn}
-            <choose>
-                <when test='hidden_yn == "N"'>
-                    , QNA_PW = NULL
-                </when>
-                <otherwise>
-                    <if test="qna_pw != null and qna_pw != ''">
-                        , QNA_PW = #{qna_pw}
-                    </if>
-                </otherwise>
-            </choose>
         </if>
         WHERE   QNA_ID = #{qna_id}
     </update>

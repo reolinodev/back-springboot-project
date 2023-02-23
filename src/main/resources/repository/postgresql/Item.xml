@@ -93,10 +93,13 @@
         /* sql : ItemRepository.findBoardByUseYnAndBoardType */
         SELECT  BOARD_ID,
                 BOARD_TITLE,
-                USE_YN
+                USE_YN,
+                BOARD_ID||'/'||BOARD_TYPE AS BOARD_VAL
         FROM    TB_BOARD
         WHERE   USE_YN = #{use_yn}
-        AND     BOARD_TYPE = #{board_type}
+        <if test="board_type != null and board_type != '' and board_type != 'ALL'">
+            AND     BOARD_TYPE = #{board_type}
+        </if>
         ORDER BY BOARD_ID
     </select>
 
