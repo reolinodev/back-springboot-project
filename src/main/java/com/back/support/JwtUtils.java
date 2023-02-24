@@ -25,7 +25,8 @@ public class JwtUtils {
     @Autowired
     private JwtUtils jwtUtils;
 
-    private String secretKey = "reolino";
+    @Value("${token.secretKey}")
+    String secretKey;
 
     @Value("${token.long}")
     String tokenLong;

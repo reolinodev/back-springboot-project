@@ -6,6 +6,7 @@ import com.back.support.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -57,19 +58,24 @@ public class JwtFilter extends OncePerRequestFilter {
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     }else{
                         ObjectMapper mapper = new ObjectMapper();
-                        Map<String, Object> resBody = new HashMap<>();
                         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                         response.setCharacterEncoding("UTF-8");
                         response.setStatus(HttpStatus.FORBIDDEN.value());
+
+                        LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+                        Map<String, Object> resBody = new HashMap<>();
                         resBody.put("result_code", "tokenInvalid");
                         resBody.put("message", "인증토큰이 유효하지 않습니다.");
-                        mapper.writeValue(response.getWriter(), resBody);
+                        map.put("header", resBody);
+
+                        mapper.writeValue(response.getWriter(), map);
                     }
                 }
             }
             else if(!jwtUtils.validateToken(token)) {
 
                 ObjectMapper mapper = new ObjectMapper();
+                LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
                 Map<String, Object> resBody = new HashMap<>();
 
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -77,8 +83,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 if("Y".equals(tokenLong)){
                     response.setStatus(HttpStatus.FORBIDDEN.value());
+
                     resBody.put("result_code", "tokenInvalid");
                     resBody.put("message", "인증토큰이 유효하지 않습니다.");
+                    map.put("header", resBody);
                 }else{
                     LoginEntity loginEntity = loginService.getTokenInfo(params);
                     String refreshToken = "";
@@ -88,7 +96,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
                     if(!"".equals(refreshToken)){
                         if (jwtUtils.validateToken(refreshToken)) {
-                            response.setStatus(HttpStatus.OK.value());
+                            response.setStatus(HttpStatus.UNAUTHORIZED.value());
                             LoginEntity loginData = loginService.getLoginId(loginEntity.login_id);
                             String accessToken = jwtUtils.generateToken(loginData);
                             loginData.access_token = accessToken;
@@ -98,20 +106,23 @@ public class JwtFilter extends OncePerRequestFilter {
                             resBody.put("message", "새 인증토큰을 발급했습니다.");
                             resBody.put("new_token", accessToken);
                             resBody.put("new_expired_token_time", jwtUtils.getValidTime(accessToken));
+                            map.put("header", resBody);
                         }else {
                             response.setStatus(HttpStatus.FORBIDDEN.value());
                             resBody.put("result_code", "tokenInvalid");
                             resBody.put("message", "인증토큰이 유효하지 않습니다.");
+                            map.put("header", resBody);
                         }
 
                     }else{
                         response.setStatus(HttpStatus.FORBIDDEN.value());
                         resBody.put("result_code", "tokenInvalid");
                         resBody.put("message", "인증토큰이 유효하지 않습니다.");
+                        map.put("header", resBody);
                     }
                 }
 
-                mapper.writeValue(response.getWriter(), resBody);
+                mapper.writeValue(response.getWriter(), map);
             }
         }
 
