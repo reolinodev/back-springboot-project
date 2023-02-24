@@ -53,6 +53,9 @@ public class Menu {
     @ApiModelProperty(example = "메인화면여부")
     public String main_yn;
 
+    @ApiModelProperty(example = "게시판값")
+    public String board_val;
+
     @ApiModelProperty(example = "등록일")
     public String created_at;
 
