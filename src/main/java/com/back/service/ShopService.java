@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class PlanService {
+public class ShopService {
 
     private final NaverClient naverClient;
 

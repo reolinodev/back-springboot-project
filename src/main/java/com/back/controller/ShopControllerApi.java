@@ -1,7 +1,7 @@
 package com.back.controller;
 
 import com.back.domain.Shop;
-import com.back.service.PlanService;
+import com.back.service.ShopService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/plan")
-@Api(value = "plan controller Api")
-public class PlanControllerApi {
+@Api(value = "shop controller Api")
+public class ShopControllerApi {
 
     @Autowired
-    PlanService planService;
+    ShopService planService;
 
     @GetMapping("/shop")
     @ApiOperation(value = "가게를 조회한다. 네이버 검색 api")
