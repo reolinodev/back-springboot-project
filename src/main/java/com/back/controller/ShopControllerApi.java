@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/plan")
+@RequestMapping("/api")
 @Api(value = "shop controller Api")
 public class ShopControllerApi {
 
     @Autowired
-    ShopService planService;
+    ShopService shopService;
 
     @GetMapping("/shop")
     @ApiOperation(value = "가게를 조회한다. 네이버 검색 api")
@@ -26,7 +26,7 @@ public class ShopControllerApi {
         @ApiImplicitParam(name = "query", value = "검색어", dataType = "String", example = "갈비"),
     })
     public Shop findShopAll(@RequestParam String query) {
-        return planService.findShopAll(query);
+        return shopService.findShopAll(query);
     }
 
 }
