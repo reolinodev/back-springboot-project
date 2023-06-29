@@ -29,15 +29,15 @@
                 A.TEL_NO,
                 A.USE_YN,
                 A.PW_FAIL_CNT,
-                A.LAST_LOGIN_DT
+                A.LAST_LOGIN_AT
         FROM 	TB_USER A
         WHERE   A.LOGIN_ID = #{login_id}
     </select>
 
-    <update id="saveLastLoginDt" parameterType="loginEntity">
-        /* sql : LoginRepository.saveLastLoginDt */
+    <update id="saveLastLoginAt" parameterType="loginEntity">
+        /* sql : LoginRepository.saveLastLoginAt */
         UPDATE 	TB_USER
-        SET 	LAST_LOGIN_DT = now(),
+        SET 	LAST_LOGIN_AT = now(),
                 PW_FAIL_CNT = 0
         WHERE 	LOGIN_ID = #{login_id}
     </update>

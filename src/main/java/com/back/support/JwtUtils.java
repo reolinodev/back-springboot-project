@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,10 +25,13 @@ public class JwtUtils {
     @Autowired
     private JwtUtils jwtUtils;
 
-    private String secretKey = "reolino";
+    @Value("${token.secret.key}")
+    private String tokenSecretKey;
 
-    // 토큰 유효시간 4시간
-    private final long tokenValidTime = 4 * 60 * 60 * 1000L;
+    // 억세스 토큰 유효시간 4시간, 리프레시 토큰 유효시간 24시간
+    private final long accessTokenValidTime = 4 * 60 * 60 * 1000L;
+    private final long refeshTokenValidTime = 24 * 60 * 60 * 1000L;
+
 
     public String generateToken(LoginEntity loginEntity) {
         Map<String, Object> claims = new HashMap<>();
@@ -45,12 +49,12 @@ public class JwtUtils {
             .setClaims(claims)
             .setSubject(loginEntity.login_id)
             .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis() + tokenValidTime))
+            .setExpiration(new Date(System.currentTimeMillis() + accessTokenValidTime))
             .claim("user_id", loginEntity.user_id)
             .claim("login_id", loginEntity.login_id)
             .claim("user_nm", loginEntity.user_nm)
             .claim("user_pw", loginEntity.user_pw)
-            .signWith(SignatureAlgorithm.HS256, secretKey).compact();
+            .signWith(SignatureAlgorithm.HS256, tokenSecretKey).compact();
     }
 
     private String createRefreshToken(Map<String, Object> claims, LoginEntity loginEntity) {
@@ -58,17 +62,17 @@ public class JwtUtils {
             .setClaims(claims)
             .setSubject(loginEntity.login_id)
             .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis() + tokenValidTime * 6))
+            .setExpiration(new Date(System.currentTimeMillis() + refeshTokenValidTime))
             .claim("user_id", loginEntity.user_id)
             .claim("login_id", loginEntity.login_id)
             .claim("user_nm", loginEntity.user_nm)
             .claim("user_pw", loginEntity.user_pw)
-            .signWith(SignatureAlgorithm.HS256, secretKey).compact();
+            .signWith(SignatureAlgorithm.HS256, tokenSecretKey).compact();
     }
 
     public Claims getClaims(String token) {
         return Jwts.parser()
-            .setSigningKey(secretKey)
+            .setSigningKey(tokenSecretKey)
             .parseClaimsJws(token)
             .getBody();
     }
@@ -91,7 +95,7 @@ public class JwtUtils {
 
     public boolean validateToken(String token) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            Jws<Claims> claims = Jwts.parser().setSigningKey(tokenSecretKey).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
             return false;
@@ -100,7 +104,7 @@ public class JwtUtils {
 
     public String getValidTime(String token) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            Jws<Claims> claims = Jwts.parser().setSigningKey(tokenSecretKey).parseClaimsJws(token);
             return claims.getBody().getExpiration().toString();
         } catch (Exception e) {
             return "";

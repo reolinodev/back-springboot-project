@@ -1,6 +1,6 @@
 package com.back.api.service;
 
-import com.back.service.PlanService;
+import com.back.service.ShopService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class PlanServiceTest {
 
     @Autowired
-    private PlanService planService;
+    private ShopService planService;
 
     @Test
     void findShopAll() {

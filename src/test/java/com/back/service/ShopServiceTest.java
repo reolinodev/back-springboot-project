@@ -6,17 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PlanServiceTest {
+class ShopServiceTest {
 
     @Autowired
-    private PlanService planService;
+    private ShopService shopService;
 
     @Test
     void findShopAll() {
         //given
         String str = "서울";
         //when
-        var result = planService.findShopAll(str);
+        var result = shopService.findShopAll(str);
         System.out.println("result = " + result);
         //then
         Assertions.assertNotNull(result.getAddress());

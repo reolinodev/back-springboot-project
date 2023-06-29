@@ -26,7 +26,7 @@ public class LoginService {
     }
 
     public int updateLastLoginDt(LoginEntity loginEntity) {
-        return  loginRepository.saveLastLoginDt(loginEntity);
+        return  loginRepository.saveLastLoginAt(loginEntity);
     }
 
     public int updatePwfailCnt(LoginEntity loginEntity) {

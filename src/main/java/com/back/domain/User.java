@@ -52,5 +52,5 @@ public class User extends DataLog {
     public int pw_fail_cnt;
 
     @ApiModelProperty(example = "최근 로그인시간")
-    public String last_login_dt;
+    public String LAST_LOGIN_AT;
 }
