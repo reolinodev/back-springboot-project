@@ -1,4 +1,6 @@
 # 1.BASIC
+: 간단하게 구현해본 기본적인 스프링 부트의 res api 설정입니다. 
+자바 11버전을 사용하고 있습니다.
 
 ### # 구현 내용
 #### 1. AOP 적용
@@ -14,7 +16,7 @@
 #### 4. Spring profile 설정
 - dev, qa, prod로 분기
 
-#### 5. Response 형태 설정
+#### 5. Response 템플릿 작성
 - data, header
 
 #### 6. 외부 API 호출 예제
