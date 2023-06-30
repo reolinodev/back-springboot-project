@@ -1,6 +1,5 @@
 package com.back.admin.service;
 
-import com.back.admin.domain.LoginEntity;
 import com.back.admin.domain.QnaEntity;
 import com.back.admin.repository.QnaRepository;
 import com.back.support.CryptUtils;

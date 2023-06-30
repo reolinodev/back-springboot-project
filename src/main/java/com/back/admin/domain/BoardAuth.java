@@ -1,6 +1,5 @@
 package com.back.admin.domain;
 
-import com.back.admin.domain.common.Param;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

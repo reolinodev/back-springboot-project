@@ -1,6 +1,5 @@
 package com.back.admin.controller;
 
-import com.back.admin.domain.FaqEntity;
 import com.back.admin.domain.QnaEntity;
 import com.back.admin.domain.common.ValidationGroups;
 import com.back.admin.service.QnaService;
@@ -38,7 +37,7 @@ public class QnaControllerAPI {
 
     private final QnaService qnaService;
     private final JwtUtils jwtUtils;
-    
+
     @ApiOperation(value = "QNA를 전체조회한다.")
     @PostMapping("")
     public ResponseEntity<Map<String,Object>> getQnaList(

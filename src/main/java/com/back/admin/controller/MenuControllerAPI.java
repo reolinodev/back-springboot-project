@@ -1,6 +1,5 @@
 package com.back.admin.controller;
 
-import com.back.admin.domain.MenuAuth;
 import com.back.admin.domain.MenuEntity;
 import com.back.admin.domain.common.ValidationGroups;
 import com.back.admin.service.MenuAuthService;

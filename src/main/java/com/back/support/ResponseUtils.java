@@ -1,8 +1,8 @@
 package com.back.support;
 
+import com.back.domain.Header;
 import com.back.domain.JwtHeader;
 import javax.servlet.http.HttpServletRequest;
-import com.back.domain.Header;
 
 public class ResponseUtils {
 

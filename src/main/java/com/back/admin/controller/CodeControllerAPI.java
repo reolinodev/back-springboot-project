@@ -10,7 +10,6 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,7 +52,7 @@ public class CodeControllerAPI {
 
         return new ResponseEntity<> (responseMap, HttpStatus.OK);
     }
-    
+
     @ApiOperation(value = "코드를 저장한다.")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "code_grp_id", value = "코드그룹식별키", required = true, dataType = "String", paramType = "path", example = "CDG0000001"),

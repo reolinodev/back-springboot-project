@@ -3,7 +3,6 @@ package com.back.admin.controller;
 import com.back.admin.domain.AuthEntity;
 import com.back.admin.domain.common.ValidationGroups;
 import com.back.admin.service.AuthService;
-import com.back.domain.Header;
 import com.back.support.JwtUtils;
 import com.back.support.ResponseUtils;
 import io.swagger.annotations.Api;

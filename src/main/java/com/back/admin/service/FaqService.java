@@ -1,7 +1,6 @@
 package com.back.admin.service;
 
 import com.back.admin.domain.FaqEntity;
-import com.back.admin.domain.PostEntity;
 import com.back.admin.repository.FaqRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
