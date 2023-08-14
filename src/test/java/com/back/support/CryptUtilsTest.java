@@ -15,6 +15,18 @@ class CryptUtilsTest {
     void encrypt() throws IOException {
         String str = "test";
         String ecnryptStr = CryptUtils.encrypt(str);
-        System.out.println("=="+ecnryptStr);
+        System.out.println(ecnryptStr);
     }
+
+
+    @Test
+    void decrypt() throws IOException {
+        String str = "";
+        String decryptStr = CryptUtils.decrypt(str);
+        System.out.println(decryptStr);
+    }
+
+
 }
+
+
